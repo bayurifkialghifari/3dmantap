@@ -1,6 +1,7 @@
 import { useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
+import { printTargetGeometry } from './projection';
 export function ProjectedArtwork({
   target,
   root,
@@ -22,7 +23,7 @@ export function ProjectedArtwork({
       .copy(root.matrixWorld)
       .invert()
       .multiply(target.matrixWorld);
-    const source = target.geometry.clone().applyMatrix4(transform);
+    const source = printTargetGeometry(target.geometry, transform, rotation);
     const proxy = new THREE.Mesh(source, target.material);
     proxy.matrixWorld.identity();
     const decal = new DecalGeometry(

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 — 2026-11-11
+
+### Changed
+
+- Rebuilt the storefront around product renders, Inter typography, neutral colors, simpler navigation and responsive Fashion/Interior catalogs.
+- Replaced procedural product geometry with sourced local GLBs. Furniture uses extracted board/door components with original UV/PBR maps and physical panel dimensions.
+- Added model provenance, public asset credits, source integrity hashes, reproducible TypeScript preparation/capture scripts and GLB validation tests.
+- Optimized the shoe to a 1K beach variant; neutralized hat color and removed the tee source logo. Starter hat/duffel names now match their models.
+- Fixed quantized mesh artwork projection, product preview clipping, material disposal and shadow artifacts; model loading appears outside Canvas.
+- Added camera-dependent room wall cutaway and precaching for public GLBs, WebP previews and WOFF2 fonts.
+
+### Limits
+
+- Fashion uses the source rest pose; the duffel is a low-poly asset. Furniture is assembled from sourced components. Preview materials and print areas require production consultation.
+- Dribbble access was unavailable during this redesign; no specific Dribbble design is claimed as reviewed or copied.
+
 ## 0.1.0 — 2026-11-11
 
 ### Added

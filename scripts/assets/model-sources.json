@@ -1,0 +1,130 @@
+[
+  {
+    "name": "tshirt",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://raw.githubusercontent.com/kblood/CharacterCreator/852e48f316b90a0937234886630e4fb4cdfd1f78/output/clothing_tshirt.glb",
+        "sha256": "f77eaea89354ad57bcce48a877bec314e82d71de84700810e7c8290b20886063"
+      }
+    ]
+  },
+  {
+    "name": "hoodie",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://raw.githubusercontent.com/kblood/CharacterCreator/852e48f316b90a0937234886630e4fb4cdfd1f78/output/clothing_hoodie.glb",
+        "sha256": "264ad136179ac35326a273116652cf44badc189f6c78f09d188ecda19b3fd969"
+      }
+    ]
+  },
+  {
+    "name": "jacket",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://raw.githubusercontent.com/kblood/CharacterCreator/852e48f316b90a0937234886630e4fb4cdfd1f78/output/clothing_jacket.glb",
+        "sha256": "22c489abb90fa3af3381948a91016ae2fa5dc5ab1c1152721527ac74c70e9dbd"
+      }
+    ]
+  },
+  {
+    "name": "jeans",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://raw.githubusercontent.com/kblood/CharacterCreator/852e48f316b90a0937234886630e4fb4cdfd1f78/output/clothing_jeans.glb",
+        "sha256": "dac0e90aba219415e895eed0e471c0a9aab6b53f8870be1f8dfd41cd89c25d11"
+      }
+    ]
+  },
+  {
+    "name": "sneaker",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb",
+        "sha256": "e1d7cb190382111e5a5b37b51e9a7f007f7eb2ab1b6185e0188e8d0a0d1265a7"
+      }
+    ]
+  },
+  {
+    "name": "duffel",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://static.poly.pizza/4f52d8a5-4ebb-4099-9686-d841a03d85dd.glb",
+        "sha256": "f07fd9fdb43d0a4cf1eec1ae60f5752165367d104a27f4aeb508d5ecca9812aa"
+      }
+    ]
+  },
+  {
+    "name": "fishermans_hat",
+    "format": "gltf",
+    "files": [
+      {
+        "path": "model.gltf",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/fishermans_hat/fishermans_hat_1k.gltf",
+        "sha256": "5178f62b9238f27624f99b32b590085233bfa373f97e5b999eb111f8b3f1c473"
+      },
+      {
+        "path": "textures/fishermans_hat_nor_gl_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fishermans_hat/fishermans_hat_nor_gl_1k.jpg",
+        "sha256": "906540073940562861e555f05f9359edec554272fcfa89452ac70e275a0f1430"
+      },
+      {
+        "path": "textures/fishermans_hat_diff_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fishermans_hat/fishermans_hat_diff_1k.jpg",
+        "sha256": "68d281ac3b8d01a195ea4fc68dd6e403b7589a2c8fa950b7a732ae2e7bea6e5d"
+      },
+      {
+        "path": "textures/fishermans_hat_arm_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/fishermans_hat/fishermans_hat_arm_1k.jpg",
+        "sha256": "345aee18896df5879d845dd3852b734fbb53551e1110245d6e5a4297b64e959d"
+      },
+      {
+        "path": "fishermans_hat.bin",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/fishermans_hat/fishermans_hat.bin",
+        "sha256": "793a27019bd1d99302452729a3feb0cd271b3f268f059a8fec60ec0c23a443e1"
+      }
+    ]
+  },
+  {
+    "name": "modern_wooden_cabinet",
+    "format": "gltf",
+    "files": [
+      {
+        "path": "model.gltf",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/modern_wooden_cabinet/modern_wooden_cabinet_1k.gltf",
+        "sha256": "9c0765063297018e854d11bc27da3cbab3c33904a3be2f5c15f46635df7e857f"
+      },
+      {
+        "path": "modern_wooden_cabinet.bin",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/modern_wooden_cabinet/modern_wooden_cabinet.bin",
+        "sha256": "04e664a95f52c48d0caa8c3148ab7e4ad4a0554b37a2a5c0e39dc6ed6c46cafe"
+      },
+      {
+        "path": "textures/modern_wooden_cabinet_nor_gl_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modern_wooden_cabinet/modern_wooden_cabinet_nor_gl_1k.jpg",
+        "sha256": "f08b3d0619a60e2eac19c9d9c0d7dc0e3eb75af2692d84b32ddfd12d857c15ab"
+      },
+      {
+        "path": "textures/modern_wooden_cabinet_arm_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modern_wooden_cabinet/modern_wooden_cabinet_arm_1k.jpg",
+        "sha256": "fad6df227ec6d431387b10bd244a0d087e89e6dce0b1c732df5c87f0a1def3f5"
+      },
+      {
+        "path": "textures/modern_wooden_cabinet_diff_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/modern_wooden_cabinet/modern_wooden_cabinet_diff_1k.jpg",
+        "sha256": "e494b67439da73775413d6aaea369ae05a8ebd7705be8df08dbcd2ee4fd545e4"
+      }
+    ]
+  }
+]

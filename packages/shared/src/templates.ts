@@ -25,7 +25,7 @@ function fashion(
     category,
     studio: 'fashion',
     description:
-      'Pilih warna, ukuran, dan artwork. Template awal original; validasi ukuran cetak dengan tim produksi.',
+      'Pilih warna, ukuran, dan artwork. Validasi ukuran dan area cetak bersama tim produksi.',
     modelKind: kind,
     color,
     basePrice: price,
@@ -35,25 +35,34 @@ function fashion(
         : kind === 'cap' || kind === 'bag'
           ? ['One Size']
           : ['S', 'M', 'L', 'XL', 'XXL'],
-    dimensions: { width, height, depth: kind === 'shoe' ? 300 : 140 },
+    dimensions: { width, height, depth: kind === 'shoe' ? 300 : kind === 'bag' ? 220 : 140 },
     surfaces: [
       {
         id: 'front',
         label: kind === 'shoe' ? 'Sisi luar' : 'Depan',
         width: kind === 'cap' ? 120 : kind === 'shoe' ? 160 : kind === 'pants' ? 120 : 280,
-        height: kind === 'cap' ? 60 : kind === 'shoe' ? 60 : kind === 'pants' ? 180 : 320,
+        height:
+          kind === 'cap'
+            ? 60
+            : kind === 'shoe'
+              ? 60
+              : kind === 'pants'
+                ? 180
+                : kind === 'bag'
+                  ? 140
+                  : 320,
         face: 'front',
         centerX: kind === 'pants' ? -width / 4 : 0,
-        centerY: kind === 'cap' ? 30 : 0,
+        centerY: kind === 'cap' ? -20 : 0,
       },
       {
         id: 'back',
         label: 'Belakang',
         width: kind === 'cap' ? 80 : kind === 'pants' ? 120 : 250,
-        height: kind === 'cap' ? 40 : kind === 'pants' ? 180 : 300,
+        height: kind === 'cap' ? 40 : kind === 'pants' ? 180 : kind === 'bag' ? 140 : 300,
         face: 'back',
         centerX: kind === 'pants' ? -width / 4 : 0,
-        centerY: kind === 'cap' ? 40 : 0,
+        centerY: kind === 'cap' ? -20 : 0,
       },
     ],
     active: true,
@@ -100,9 +109,9 @@ export const starterTemplates: ProductTemplate[] = [
   fashion('essential-hoodie', 'Essential Hoodie', 'Hoodie', 'hoodie', 225000, '#638177', 650, 760),
   fashion('utility-jacket', 'Utility Jacket', 'Jaket', 'jacket', 285000, '#b3a187', 650, 760),
   fashion('daily-pants', 'Daily Pants', 'Celana', 'pants', 195000, '#596365', 450, 1000),
-  fashion('signature-cap', 'Signature Cap', 'Topi', 'cap', 85000, '#b47654', 240, 180),
+  fashion('signature-cap', 'Canvas Bucket Hat', 'Topi', 'cap', 85000, '#b47654', 240, 180),
   fashion('canvas-sneaker', 'Canvas Sneaker', 'Sepatu', 'shoe', 325000, '#ded9cf', 320, 140),
-  fashion('canvas-tote', 'Canvas Tote', 'Aksesori Fashion', 'bag', 75000, '#c9b896', 400, 420),
+  fashion('canvas-tote', 'Weekend Duffel', 'Aksesori Fashion', 'bag', 75000, '#c9b896', 500, 300),
   interior('modular-wardrobe', 'Modular Wardrobe', 'Lemari', 'cabinet', 1800, 2200, 600, '#bb9670'),
   interior('open-bookshelf', 'Open Bookshelf', 'Rak', 'shelf', 1200, 1800, 350, '#dcc9aa'),
   interior('work-desk', 'Work Desk', 'Meja', 'desk', 1400, 750, 650, '#bb9670'),

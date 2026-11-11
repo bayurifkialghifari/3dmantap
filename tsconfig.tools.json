@@ -1,5 +1,10 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": { "types": ["bun"] },
-  "include": ["scripts/**/*.ts", "tests/**/*.ts", "playwright.config.ts"]
+  "include": [
+    "scripts/**/*.ts",
+    "tests/**/*.ts",
+    "apps/web/src/features/editor/*.test.ts",
+    "playwright.config.ts"
+  ]
 }

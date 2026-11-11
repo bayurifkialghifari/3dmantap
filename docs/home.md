@@ -4,6 +4,8 @@
 
 Menampilkan dua studio, template dari database, langkah konsultasi, dan pintu masuk room planner. Tidak menampilkan ulasan atau jumlah pesanan fiktif.
 
+Tampilan katalog memakai Inter, warna netral, tipografi besar dan foto produk WebP dari viewer GLB. Hero, kategori dan grid memakai aset produk nyata; gambar room planner berasal dari ruangan dengan furnitur di viewer. Navigasi dan grid menyesuaikan layar HP. Kredit model dapat dibuka dari footer.
+
 ## Kontrak dan data
 
 GET /templates

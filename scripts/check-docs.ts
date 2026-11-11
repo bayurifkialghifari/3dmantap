@@ -3,6 +3,7 @@ const names = [
   'home',
   'accounts',
   'catalog',
+  'model-assets',
   'templates',
   'fashion-editor',
   'interior-editor',
@@ -33,4 +34,4 @@ for (const path of [
   const content = await Bun.file(path).text();
   if (content.length < 100) throw new Error('Empty documentation: ' + path);
 }
-console.log('Documentation complete: 19 feature documents and required project guides.');
+console.log('Documentation complete: 20 feature documents and required project guides.');

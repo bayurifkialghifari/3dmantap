@@ -28,7 +28,7 @@ Jika memakai MySQL sendiri atau Linux/macOS, jalankan setup untuk environment, l
 6. Backend baru mengizinkan produksi setelah seluruh syarat lengkap. Worker menyiapkan paket kerja ZIP.
 7. Admin mencatat progres/foto dan penerimaan barang. Pengiriman/penyelesaian membutuhkan pelunasan.
 
-Sebelum menerima pesanan nyata, atur WhatsApp, rekening, alamat, harga, tarif, dan template produksi di CMS. **13 template original serta harga awal adalah contoh** yang harus divalidasi bisnis. Model fashion awal adalah preview skematis; bentuk/pola produksi mengikuti template toko. GLB sendiri harus sesuai ukuran, aturan template dan area cetaknya. Paket kerja tidak otomatis membuat pola jahit, file bordir, atau CNC.
+Sebelum menerima pesanan nyata, atur WhatsApp, rekening, alamat, harga, tarif, dan template produksi di CMS. **13 template serta harga awal adalah contoh** yang harus divalidasi bisnis. Preview fashion/aksesori memakai GLB bersumber dengan lisensi tercatat; furnitur memakai komponen GLB kabinet yang dirakit mengikuti ukuran panel. GLB toko dapat menggantikan model default. Bentuk/pola produksi dan area cetak dikonfirmasi saat konsultasi; paket kerja tidak otomatis membuat pola jahit, file bordir, atau CNC.
 
 ## Room planner dan artwork
 
@@ -51,9 +51,11 @@ bun run build
 
 Tes integrasi menggunakan MySQL yang dikonfigurasi; browser tests menggunakan server lokal dan akun bootstrap. CI menjalankan checks dengan MySQL terisolasi. Screenshot/trace berada di .data, test-results dan playwright-report.
 
-Verifikasi lokal 11 November 2026: lint, format, typecheck, dokumentasi, 15 tes domain/backend, 6 tes browser, dan build lulus. Hasil build juga diuji dengan service worker aktif: navigasi dan draft tetap bekerja offline, tanpa memasukkan respons API ke cache. Syntax Compose valid; build/run container belum diuji karena engine Docker lokal belum aktif.
+Verifikasi lokal 0.2.0 pada 11 November 2026: lint, format, typecheck, dokumentasi, 19 tes domain/backend/geometri, suite 6 tes browser, dan build lulus. Alur artwork/ruangan diulang setelah perbaikan proyeksi, termasuk pemeriksaan screenshot topi dan kabinet. Build diuji dengan service worker aktif: navigasi, draft, delapan GLB default, font Inter dan gambar studio tersedia offline; respons API tidak masuk cache. Syntax Compose valid; build/run container belum diuji karena engine Docker lokal belum aktif.
 
 Perintah tambahan: bun run format, db:migrate, db:seed, start, dan worker. Untuk server produksi yang sudah dibangun, jalankan start dan worker sebagai dua proses yang diawasi supervisor.
+
+Model runtime sudah dibundel. Untuk memperbaruinya, jalankan **bun run models:prepare** (download sumber dengan verifikasi SHA-256) lalu **bun run models:previews** saat aplikasi lokal berjalan. [Panduan model dan kredit](docs/model-assets.md) menjelaskan sumber, pengolahan, dan batas preview.
 
 ## Deployment
 
@@ -72,5 +74,5 @@ Backup database dan volume uploads bersama. Pada lokal, backup database 3dmantap
 ## Dokumentasi dan aset
 
 - [PRD](PRD.md), [arsitektur](architecture.md), [instruksi agent](AGENTS.md), [changelog](CHANGELOG.md).
-- [Indeks 19 fitur](docs/README.md).
-- Font Manrope dan Noto dibundel dengan SIL Open Font License di public/fonts. Logo, ilustrasi, dan geometri starter dibuat untuk project ini. Ikon PNG dapat diregenerasi dengan bun run apps/api/src/tools/icons.ts.
+- [Indeks 20 fitur](docs/README.md), [sumber GLB dan batas model](docs/model-assets.md).
+- Font Inter, Manrope dan Noto dibundel dengan SIL Open Font License di public/fonts. Kredit GLB tersedia pada /models/credits.html. Thumbnail produk berasal dari viewer GLB aplikasi. Ikon PNG dapat diregenerasi dengan bun run apps/api/src/tools/icons.ts.

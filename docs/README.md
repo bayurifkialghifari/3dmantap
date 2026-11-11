@@ -5,6 +5,7 @@ Setiap dokumen menjelaskan implementasi, kontrak dan acceptance criteria. Persya
 - [Beranda](home.md)
 - [Akun dan akses](accounts.md)
 - [Katalog dan preview 3D](catalog.md)
+- [Model GLB, pengolahan dan kredit aset](model-assets.md)
 - [Produk dan template](templates.md)
 - [Studio Fashion](fashion-editor.md)
 - [Studio Interior](interior-editor.md)

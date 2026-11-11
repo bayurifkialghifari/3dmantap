@@ -19,14 +19,19 @@ test('homepage, catalog and all product previews render', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /Bukan sekadar pilih/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Bikin yang pas/ })).toBeVisible();
   await page.screenshot({ path: '.data/home-desktop.png', fullPage: true });
   await page.getByRole('link', { name: 'Buka Fashion Studio' }).click();
-  await expect(page.getByRole('heading', { name: /Bikin gaya/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Fashion Studio/ })).toBeVisible();
   for (const template of starterTemplates) {
     await page.goto('/product/' + template.id);
     await expect(page.getByRole('heading', { name: template.name, exact: true })).toBeVisible();
     await expect(page.locator('.detail-preview canvas')).toBeVisible();
+    await expect(page.locator('.detail-preview canvas')).toHaveAttribute(
+      'data-model-loaded',
+      template.modelKind,
+      { timeout: 40000 },
+    );
   }
   expect(errors).toEqual([]);
 });
@@ -132,7 +137,7 @@ test('admin receives submissions and rejects unapproved production', async ({ pa
 test('mobile homepage and fashion controls fit screen', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /Bukan sekadar pilih/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Bikin yang pas/ })).toBeVisible();
   await page.screenshot({ path: '.data/home-mobile.png', fullPage: true });
   await page.goto('/studio/signature-cap');
   await page.getByRole('button', { name: 'Warna', exact: true }).click();

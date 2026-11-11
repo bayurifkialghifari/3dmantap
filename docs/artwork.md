@@ -6,6 +6,10 @@ Layer teks atau gambar memiliki area, titik pusat X/Y, lebar/tinggi, rotasi, opa
 
 Renderer SVG yang sama menghasilkan gambar 2D, tekstur 3D, dan hasil cetak. Teks memakai font Noto lokal yang diubah menjadi path agar tidak bergantung pada font mesin operator. Artwork topi diproyeksikan ke permukaan melengkung; artwork furnitur mengikuti mesh panel. Template GLB dapat menetapkan meshName untuk proyeksi.
 
+Proyeksi memakai mesh GLB produk yang sebenarnya. Atribut posisi/normal quantized dikonversi ke Float32 sebelum transformasi salinan geometri agar koordinat proyeksi tetap benar; geometri sumber tidak diubah. ID panel pintu/laci memilih mesh fisik yang tepat. Area cetak tetap harus cocok dengan model toko dan diverifikasi sebelum produksi.
+
+Segitiga sisi belakang dan permukaan yang nyaris sejajar arah proyeksi tidak menerima artwork. Batas ini mencegah teks depan topi ikut memanjang di brim; area yang memerlukan cetak dari arah lain harus memiliki permukaan/arah cetak tersendiri.
+
 ## Kontrak dan data
 
 Teks di-outline per glyph dengan kerning dan normalisasi Unicode NFC. Font awal ditujukan untuk teks Latin/Indonesia; ligature dan shaping aksara kompleks belum tersedia. Untuk bentuk huruf khusus, upload artwork SVG/PNG yang sudah disiapkan.

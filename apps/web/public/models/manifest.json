@@ -1,0 +1,42 @@
+[
+  {
+    "file": "tshirt.glb",
+    "sha256": "0afefdcac987aad5d455b7d66deb5f15bf1635f222ed757885c90a1bb6a9848c",
+    "bytes": 78168
+  },
+  {
+    "file": "hoodie.glb",
+    "sha256": "f29033d472364a6a0a95e85f8bd5a0b5a7be71117b2cb48e6825d134c0c598a1",
+    "bytes": 202632
+  },
+  {
+    "file": "jacket.glb",
+    "sha256": "8a6a90c648cdbcfe6a5f8c790b6917b5e7dba0bc4e4a0ee7c6003f5bff618f18",
+    "bytes": 239348
+  },
+  {
+    "file": "jeans.glb",
+    "sha256": "959d7ff6d50cd70fbd74934e0b4ae955d8dde9b3cedb2ce9f5e871b90bbbf194",
+    "bytes": 179196
+  },
+  {
+    "file": "sneaker.glb",
+    "sha256": "ca1f9e567ece91703529aa03f28ec0decc360302e2cd2a96798197dde60964a9",
+    "bytes": 1419312
+  },
+  {
+    "file": "duffel.glb",
+    "sha256": "46d1d4d54aaaa6601f46c3a545d08e466b43d6f6d938237856e06bbf75d8ca55",
+    "bytes": 71884
+  },
+  {
+    "file": "fishermans_hat.glb",
+    "sha256": "a7af593f750df04de84c9a448c539ad630914c06f998b9f10ef7520938508d45",
+    "bytes": 2402264
+  },
+  {
+    "file": "furniture-parts.glb",
+    "sha256": "1864ce7f9bca12516a3b149d12b705997c43c27471c494e22de1f9453e9b69ea",
+    "bytes": 2090812
+  }
+]

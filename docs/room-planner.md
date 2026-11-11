@@ -6,6 +6,8 @@ Denah polygon dapat diubah dengan seret sudut dan tambah/hapus sudut. Mendukung 
 
 Alat ukur menghitung jarak antara dua titik pada denah. Ruangan tersimpan dapat dibagikan melalui token publik; penerima membuka salinan sehingga tidak mengubah ruangan asal. Ekspor lokal tersedia sebagai PNG, SVG, dan JSON. Desain furnitur dari pustaka membawa artworknya ke preview ruangan.
 
+Furnitur 3D memakai GLB yang sama dengan detail/editor produk. Tampilan cutaway menyembunyikan dinding luar yang menghadap kamera saat orbit sehingga isi ruangan terlihat; ukuran/bukaan dinding tetap ada pada dokumen dan denah. Partisi tetap terlihat. Pusat preview mengikuti batas denah. Dinding/lantai adalah geometri ruang sederhana.
+
 ## Kontrak dan data
 
 RoomProject; GET/POST /library/rooms

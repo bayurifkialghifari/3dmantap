@@ -13,8 +13,8 @@ export default defineConfig({
         name: '3DMantap',
         short_name: '3DMantap',
         description: 'Studio Fashion dan Interior 3D',
-        theme_color: '#123f35',
-        background_color: '#f7f7f2',
+        theme_color: '#242426',
+        background_color: '#f7f7f5',
         display: 'standalone',
         start_url: '/',
         icons: [
@@ -23,7 +23,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,ttf,png}'],
+        globPatterns: ['**/*.{js,css,html,svg,ttf,woff2,png,webp,glb}'],
         navigateFallbackDenylist: [/^\/api\//],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },

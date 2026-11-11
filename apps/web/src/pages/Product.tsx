@@ -23,7 +23,11 @@ export function Product() {
       </div>
       <div className="product-detail">
         <div className="detail-preview">
-          <Viewer template={t} document={d} />
+          <Viewer
+            template={t}
+            document={d}
+            capture={new URLSearchParams(window.location.search).has('capture')}
+          />
           <div className="preview-caption">
             <Move3D size={16} /> Ini model interaktif. Coba putar dari segala sudut.
           </div>

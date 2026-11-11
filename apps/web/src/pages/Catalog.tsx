@@ -36,15 +36,11 @@ export function Catalog() {
           <Badge tone={studio === 'fashion' ? 'purple' : 'green'}>
             {studio === 'fashion' ? 'FASHION' : 'INTERIOR'} STUDIO
           </Badge>
-          <h1>
-            {studio === 'fashion'
-              ? 'Bikin gaya yang cuma kamu punya.'
-              : 'Bikin ruang yang terasa seperti kamu.'}
-          </h1>
+          <h1>{studio === 'fashion' ? 'Fashion Studio.' : 'Interior Studio.'}</h1>
           <p>
             {studio === 'fashion'
-              ? 'Pilih bentuk favoritmu. Atur warna, tambahkan artwork, jadikan personal.'
-              : 'Furnitur pas ukuran, finishing pilihan, dan detail yang kamu tentukan sendiri.'}
+              ? 'Pakaian, topi, sepatu, dan aksesori. Pilih satu untuk mulai custom.'
+              : 'Furnitur dan detail ruang. Atur ukuran, finishing, dan artwork sesuai kebutuhan.'}
           </p>
         </div>
         {studio === 'interior' && (

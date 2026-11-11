@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from '@tanstack/react-router';
-import { Box, ArrowUpRight, Menu, X, Layers, UserRound, WifiOff } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Layers, UserRound, WifiOff } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useMe } from '../../lib/hooks';
 import { useRegisterSW } from 'virtual:pwa-register/react';
@@ -26,11 +26,7 @@ export function AppShell() {
     <>
       <header className="site-header">
         <Link to="/" className="brand">
-          <span className="brand-mark">
-            <Box size={22} strokeWidth={1.8} />
-          </span>
-          3D<span>Mantap</span>
-          <span className="brand-dot">®</span>
+          3DMANTAP<span className="brand-studio">STUDIO</span>
         </Link>
         <nav className={menu ? 'open' : ''} onClick={() => setMenu(false)}>
           <Link to="/catalog/$studio" params={{ studio: 'fashion' }}>
@@ -86,12 +82,9 @@ export function AppShell() {
         <footer className="site-footer">
           <div>
             <Link to="/" className="brand">
-              <span className="brand-mark">
-                <Box size={20} />
-              </span>
-              3DMantap
+              3DMANTAP<span className="brand-studio">STUDIO</span>
             </Link>
-            <p>Desainmu. Caramu. Dibuat untukmu.</p>
+            <p>Fashion, furnitur, dan detail yang kamu tentukan sendiri.</p>
           </div>
           <div className="footer-links">
             <Link to="/catalog/$studio" params={{ studio: 'fashion' }}>
@@ -104,6 +97,7 @@ export function AppShell() {
             <Link to="/library">
               <Layers size={14} /> Pustaka desain
             </Link>
+            <a href="/models/credits.html">Kredit aset</a>
           </div>
           <small>© {new Date().getFullYear()} 3DMantap · Studio custom Indonesia</small>
         </footer>

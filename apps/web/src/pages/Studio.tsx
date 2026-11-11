@@ -327,13 +327,15 @@ function Editor({ template: t }: { template: ProductTemplate }) {
                     />
                   ))}
                 </div>
-                <Field label="Warna aksen">
-                  <Input
-                    type="color"
-                    value={d.accentColor}
-                    onChange={(e) => update({ accentColor: e.target.value })}
-                  />
-                </Field>
+                {t.modelKind === 'bag' && (
+                  <Field label="Warna tali">
+                    <Input
+                      type="color"
+                      value={d.accentColor}
+                      onChange={(e) => update({ accentColor: e.target.value })}
+                    />
+                  </Field>
+                )}
                 {t.studio === 'interior' && (
                   <Field label="Finishing">
                     <Select
