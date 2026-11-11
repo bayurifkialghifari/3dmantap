@@ -1,0 +1,39 @@
+{
+  "name": "3dmantap",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.4.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run scripts/dev.ts",
+    "setup": "bun run scripts/setup.ts",
+    "db:migrate": "bun run --cwd apps/api db:migrate",
+    "db:seed": "bun run --cwd apps/api db:seed",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.tools.json && bun run --filter '*' typecheck",
+    "test": "bun test packages apps/api",
+    "test:e2e": "playwright test",
+    "build": "bun run --cwd apps/web build && bun run --cwd apps/api build",
+    "start": "bun run apps/api/src/index.ts",
+    "worker": "bun run apps/api/src/worker.ts",
+    "docs:check": "bun run scripts/check-docs.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.56.1",
+    "@types/bun": "^1.3.2",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^17.14.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4"
+  }
+}

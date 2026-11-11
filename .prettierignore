@@ -1,0 +1,7 @@
+node_modules
+dist
+.data
+bun.lock
+playwright-report
+test-results
+coverage
