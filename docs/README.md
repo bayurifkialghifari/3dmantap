@@ -8,6 +8,7 @@ Setiap dokumen menjelaskan implementasi, kontrak dan acceptance criteria. Persya
 - [Model GLB, pengolahan dan kredit aset](model-assets.md)
 - [Produk dan template](templates.md)
 - [Studio Fashion](fashion-editor.md)
+- [Manusia pembanding dan preview dipakai](human-preview.md)
 - [Studio Interior](interior-editor.md)
 - [Stiker, teks, dan area cetak](artwork.md)
 - [Room Planner 2D/3D](room-planner.md)

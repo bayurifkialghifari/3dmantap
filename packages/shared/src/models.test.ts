@@ -50,7 +50,7 @@ test('bundled GLBs match their manifest and contain finite, self-contained mesh 
     sha256: string;
     bytes: number;
   }[];
-  expect(manifest).toHaveLength(8);
+  expect(manifest).toHaveLength(9);
   for (const asset of manifest) {
     const bytes = await Bun.file(resolve(folder, asset.file)).bytes();
     expect(bytes.length).toBe(asset.bytes);

@@ -8,6 +8,8 @@ Model default dipilih per modelKind dari aset lokal; glbAssetId milik template m
 
 ## Kontrak dan data
 
+Thumbnail Canvas Sneaker dirender ulang dengan orientasi GLB asli dan skala seragam. Detail dan katalog memperlihatkan proporsi yang sama. Kaos, hoodie, jaket dan celana bawaan menyediakan Preview dipakai pada detail. [Preview manusia](human-preview.md) mencatat model 170 cm dan batas garment/ukuran yang didukung.
+
 GET /templates; GET /templates/:id
 
 ## Acceptance criteria
@@ -17,5 +19,3 @@ Semua 13 template awal membuka viewer tanpa error; kegagalan WebGL memiliki fall
 ## Verifikasi
 
 Jalankan pemeriksaan kualitas README.md. Domain diuji dengan Bun; alur browser dan izin diuji melalui Playwright. Gunakan akun/token terpisah saat memeriksa akses privat.
-
-Thumbnail Canvas Sneaker dirender ulang dengan orientasi GLB asli dan skala seragam. Detail dan katalog memperlihatkan proporsi yang sama.

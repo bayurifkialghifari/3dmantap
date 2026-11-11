@@ -5,3 +5,4 @@ export * from './production';
 export * from './artwork';
 export * from './room-export';
 export * from './models';
+export * from './room-placement';

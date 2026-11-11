@@ -3,16 +3,24 @@ import { eq, inArray } from 'drizzle-orm';
 import { unzipSync, strFromU8 } from 'fflate';
 import { PDFDocument } from 'pdf-lib';
 import sharp from 'sharp';
-import { createDesign, starterTemplates, type Inquiry } from '@3dmantap/shared';
+import {
+  createDesign,
+  starterTemplates,
+  defaultRoom,
+  addRoomProduct,
+  type RoomProject,
+  type Inquiry,
+} from '@3dmantap/shared';
 import { app } from './app';
 import { config } from './config';
 import { db } from './db/client';
-import { inquiries, jobs, assets, audit } from './db/schema';
+import { inquiries, jobs, assets, audit, rooms } from './db/schema';
 import { exportPacket } from './modules/production/export';
 let cookie = '';
 const visitor = crypto.randomUUID() + crypto.randomUUID();
 const ids: string[] = [];
 const assetIds: string[] = [];
+const roomIds: string[] = [];
 const req = (path: string, method = 'GET', data?: unknown, isAdmin = false) =>
   app.request('/api/v1' + path, {
     method,
@@ -42,6 +50,40 @@ afterAll(async () => {
     await db.delete(inquiries).where(inArray(inquiries.id, ids));
   }
   if (assetIds.length) await db.delete(assets).where(inArray(assets.id, assetIds));
+  if (roomIds.length) await db.delete(rooms).where(inArray(rooms.id, roomIds));
+});
+test('room save canonicalizes mounted doors, rejects malformed links and isolates owners', async () => {
+  const door = createDesign(starterTemplates.find((t) => t.modelKind === 'door')!);
+  const room = addRoomProduct(structuredClone(defaultRoom), door, 'door', 'leaf', 1);
+  const free = structuredClone(room);
+  delete free.items[0].openingId;
+  expect((await req('/library/rooms', 'POST', free)).status).toBe(422);
+  const dangling = structuredClone(room);
+  dangling.items[0].openingId = 'missing';
+  expect((await req('/library/rooms', 'POST', dangling)).status).toBe(422);
+  const wrong = structuredClone(room);
+  wrong.items[0].document = createDesign(starterTemplates.find((t) => t.modelKind === 'cabinet')!);
+  expect((await req('/library/rooms', 'POST', wrong)).status).toBe(422);
+  room.items[0].x = 123;
+  room.items[0].y = 234;
+  room.items[0].rotation = 17;
+  room.openings[0].width = 900;
+  const response = await req('/library/rooms', 'POST', room);
+  expect(response.status).toBe(201);
+  const saved = (await response.json()) as { id: string; document: RoomProject };
+  roomIds.push(saved.id);
+  expect(saved.document.items[0]).toMatchObject({ x: 5000, y: 2050, rotation: 90 });
+  expect(saved.document.items[0].document.dimensions.width).toBe(900);
+  expect(saved.document.person?.height).toBe(1700);
+  const unrelated = { headers: { 'x-visitor-token': crypto.randomUUID() + crypto.randomUUID() } };
+  const list = await app.request('/api/v1/library/rooms', unrelated);
+  expect(((await list.json()) as { id: string }[]).some((r) => r.id === saved.id)).toBe(false);
+  expect((await app.request('/api/v1/library/rooms/share/' + saved.id, unrelated)).status).toBe(
+    404,
+  );
+  await app.request('/api/v1/library/rooms/' + saved.id, { ...unrelated, method: 'DELETE' });
+  expect((await req('/library/rooms')).status).toBe(200);
+  expect((await db.select().from(rooms).where(eq(rooms.id, saved.id))).length).toBe(1);
 });
 test('upload validates SVG and blocks unrelated visitors', async () => {
   const form = new FormData();

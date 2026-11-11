@@ -78,3 +78,7 @@ Backup database dan volume uploads bersama. Pada lokal, backup database 3dmantap
 - Font Inter, Manrope dan Noto dibundel dengan SIL Open Font License di public/fonts. Kredit GLB tersedia pada /models/credits.html. Thumbnail produk berasal dari viewer GLB aplikasi. Ikon PNG dapat diregenerasi dengan bun run apps/api/src/tools/icons.ts.
 
 Preview sepatu mempertahankan proporsi GLB asli; thumbnail katalog dirender ulang setelah koreksi orientasi dan skala.
+
+## Preview manusia dan penempatan pintu
+
+Pintu terhubung ke dinding dan dapat diseret dalam 2D/3D. Furnitur serta manusia pembanding 170 cm dapat dipindah dalam kedua mode; panel produk membandingkan tinggi. Kaos, hoodie, jaket dan celana bawaan menyediakan Preview dipakai dengan warna/artwork desain. [Panduan manusia](docs/human-preview.md) mencatat batas rest pose dan ukuran.

@@ -10,6 +10,12 @@ Area depan/belakang bucket hat dipusatkan pada crown sesuai model sumber. Posisi
 
 ## Kontrak dan data
 
+Tombol Preview dipakai tersedia pada detail/Studio untuk kaos, hoodie, jaket dan celana bawaan. Material/warna/artwork desain dibawa ke manusia 170 cm; kaos/celana netral melengkapi pakaian. Jaket terbuka memakai kaos di bawahnya. Lihat produk saja mengembalikan viewer produk.
+
+Mode dipakai mengembalikan rest pose garment sumber sehingga pilihan ukuran belum mensimulasikan longgar/ketat atau bentuk tubuh pelanggan. Topi, sepatu, tas dan GLB unggahan belum dipasangkan pada karakter. [Batas preview manusia](human-preview.md).
+
+Sepatu bawaan mempertahankan orientasi sumber dan skala seragam. Panjang horizontal terbesar mengikuti lebar template; tinggi/depth visual mengikuti proporsi GLB, tanpa peregangan ke dimensi nominal.
+
 DesignDocument; POST /library/designs
 
 ## Acceptance criteria
@@ -19,5 +25,3 @@ Perubahan terlihat dalam 3D dan bertahan setelah reload; jumlah varian digunakan
 ## Verifikasi
 
 Jalankan pemeriksaan kualitas README.md. Domain diuji dengan Bun; alur browser dan izin diuji melalui Playwright. Gunakan akun/token terpisah saat memeriksa akses privat.
-
-Sepatu bawaan mempertahankan orientasi sumber dan skala seragam. Panjang horizontal terbesar mengikuti lebar template; tinggi/depth visual mengikuti proporsi GLB, tanpa peregangan ke dimensi nominal.

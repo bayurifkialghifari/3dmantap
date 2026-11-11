@@ -134,7 +134,8 @@ export function GLBFurniture({
   return (
     <>
       {furniturePanels(template, document).map((panel) => {
-        const source = parts[panel.id.startsWith('door-') ? 'door' : 'board'];
+        const source =
+          parts[template.modelKind === 'door' || panel.id.startsWith('door-') ? 'door' : 'board'];
         if (!source) return null;
         return (
           <mesh

@@ -1,5 +1,6 @@
 import type { RoomProject } from './contracts';
 import { escapeXml } from './artwork';
+import { roomItemPose } from './room-placement';
 export function roomPlanSvg(room: RoomProject): string {
   const minX = Math.min(...room.points.map((p) => p.x)),
     minY = Math.min(...room.points.map((p) => p.y)),
@@ -54,15 +55,16 @@ export function roomPlanSvg(room: RoomProject): string {
       '" stroke-width="80"/>';
   }
   for (const item of room.items) {
+    const pose = roomItemPose(room, item);
     const w = item.document.dimensions.width,
       d = item.document.dimensions.depth;
     content +=
       '<g transform="translate(' +
-      item.x +
+      pose.x +
       ' ' +
-      item.y +
+      pose.y +
       ') rotate(' +
-      item.rotation +
+      pose.rotation +
       ')"><rect x="' +
       -w / 2 +
       '" y="' +
@@ -77,6 +79,19 @@ export function roomPlanSvg(room: RoomProject): string {
       escapeXml(item.document.name) +
       '</text></g>';
   }
+  if (room.person)
+    content +=
+      '<g data-person-height="' +
+      room.person.height +
+      '" transform="translate(' +
+      room.person.x +
+      ' ' +
+      room.person.y +
+      ') rotate(' +
+      room.person.rotation +
+      ')"><ellipse rx="240" ry="150" fill="#6b7675"/><circle r="95" fill="#c9b7a4"/><text y="350" text-anchor="middle" font-size="85">Manusia ' +
+      room.person.height / 10 +
+      ' cm</text></g>';
   return (
     '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="' +
     Math.round((1000 * view[3]) / view[2]) +

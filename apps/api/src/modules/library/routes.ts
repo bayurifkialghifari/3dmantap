@@ -1,9 +1,10 @@
 import { Hono } from 'hono';
 import { and, eq } from 'drizzle-orm';
 import { randomBytes } from 'node:crypto';
-import { designSchema, roomSchema, validRoom } from '@3dmantap/shared';
+import { designSchema, roomSchema } from '@3dmantap/shared';
+import { prepareRoom } from './service';
 import { db } from '../../db/client';
-import { designs, rooms } from '../../db/schema';
+import { designs, rooms, templates } from '../../db/schema';
 import { fail, owner, parse, type ApiEnv } from '../../lib/http';
 export const libraryRoutes = new Hono<ApiEnv>();
 libraryRoutes.get('/designs', async (c) =>
@@ -75,9 +76,9 @@ libraryRoutes.delete('/rooms/:id', async (c) => {
   return c.json({ ok: true });
 });
 libraryRoutes.post('/rooms', async (c) => {
-  const document = await parse(c, roomSchema);
-  const issues = validRoom(document);
-  if (issues.length) fail(issues.join(' '), 422);
+  const input = await parse(c, roomSchema);
+  const catalog = (await db.select().from(templates)).map((t) => t.data);
+  const document = prepareRoom(input, catalog);
   const row = {
     id: crypto.randomUUID(),
     ownerId: owner(c),

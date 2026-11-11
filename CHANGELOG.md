@@ -2,9 +2,22 @@
 
 ## 0.3.0 — 2026-11-11
 
+### Added
+
+- Wall-linked doors with gap snapping, canonical wall alignment and linked duplication/deletion in 2D and 3D.
+- Direct 3D furniture dragging, with orbit disabled during drag and shared 5 cm snapping.
+- Clothed 170 cm reference human, draggable in both room views, adjustable height and SVG/JSON export.
+- Worn previews for built-in shirts, hoodies, jackets and pants, including custom colors/artwork; CC0 avatar provenance, integrity hashes and offline precache.
+- Domain, ownership/save and browser coverage for room placement and worn previews.
+
 ### Fixed
 
 - Sneaker orientation and nonuniform stretching; regenerated catalog thumbnail from the corrected GLB.
+- Consistent 2D/3D rotations and attached door poses when walls/opening dimensions change.
+
+### Limits
+
+- Worn previews use a static compatible source pose and do not simulate fit or support arbitrary uploaded GLBs. Room placement validates object centers and opening gaps; furniture collision detection is not included.
 
 ## 0.2.0 — 2026-11-11
 

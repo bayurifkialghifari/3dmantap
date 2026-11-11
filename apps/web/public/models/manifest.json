@@ -38,5 +38,10 @@
     "file": "furniture-parts.glb",
     "sha256": "1864ce7f9bca12516a3b149d12b705997c43c27471c494e22de1f9453e9b69ea",
     "bytes": 2090812
+  },
+  {
+    "file": "avatar.glb",
+    "sha256": "6fa85d454438f111c8545bcbf993fb9a69b225e63e4d4939de91c65a6fabe410",
+    "bytes": 1910328
   }
 ]

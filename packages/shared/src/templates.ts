@@ -142,4 +142,5 @@ export const defaultRoom: RoomProject = {
   partitions: [],
   openings: [],
   items: [],
+  person: { x: 3500, y: 2600, height: 1700, rotation: 0 },
 };

@@ -14,6 +14,10 @@ Production manifests carry derived panels, print surfaces, coordinate convention
 
 ## Persistence and runtime
 
+Shared room-placement functions derive mounted door poses from wall endpoints and opening offset/width. A door item stores openingId; the library service checks product kinds/links, canonicalizes placement and dimensions, and validates geometry before saving. Konva and R3F use the same movement operations. Clockwise 2D degrees become negative Y rotation in 3D. Corner topology edits reproject openings; deleting an opening or door removes its pair. Rooms remain JSON with an optional person field, without a SQL migration.
+
+HumanModel loads a sourced CC0 MakeHuman body and compatible garments inside one Suspense boundary. Neutral shirt/pants cover the body while switching garment previews. WornProduct reverses the standalone garment normalization to restore the shared source rest pose and artwork coordinates, then uniformly scales the group to the reference height. Uploaded GLBs have no guaranteed compatible pose and do not offer worn preview. Bundled sneakers use uniform scale from their longest horizontal axis.
+
 MySQL stores templates, designs, rooms, inquiries, payment records, audit events and export jobs. Better Auth stores users/sessions/accounts. Assets are stored on a persistent filesystem with metadata and access checks. A Bun worker leases database jobs and creates revision-bound packets. Production serves built frontend and API on one origin.
 
 ## Security
@@ -27,5 +31,3 @@ When /me resolves a signed-in account with a valid visitor capability, a transac
 Asset processing uses glTF Transform and Sharp in TypeScript scripts. Sources are pinned/hash-locked, and bundled output hashes are checked in domain tests. WebP previews are captured from the application viewer with Playwright. Model credits are shipped publicly. PWA precaches public GLBs, previews and local fonts; private API assets stay outside cache. Room walls use a camera-facing cutaway while physical floorplan data remains unchanged.
 
 Bun workspace and lockfile. ESLint, Prettier, strict typechecks, Bun domain/integration tests, Playwright browser tests. Docker deployment uses persistent database and upload volumes; backup both together.
-
-Bundled sneakers use uniform scale from their longest horizontal axis.

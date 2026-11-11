@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Stage, Layer, Line, Circle, Rect, Text, Group } from 'react-konva';
+import { Stage, Layer, Line, Circle, Ellipse, Rect, Text, Group } from 'react-konva';
 import type Konva from 'konva';
 import {
   Box,
@@ -15,15 +15,19 @@ import {
 } from 'lucide-react';
 import {
   defaultRoom,
-  createDesign,
   validRoom,
   roomPlanSvg,
+  roomItemPose,
+  roomWall,
+  roomInteriorPoint,
   type RoomProject,
   type SavedDesign,
 } from '@3dmantap/shared';
 import { api, downloadJson } from '../lib/api';
 import { useTemplates } from '../lib/hooks';
-import { RoomScene } from '../components/organisms/Viewer';
+import { RoomScene } from '../components/organisms/RoomScene';
+import { HeightComparison } from '../components/molecules/HeightComparison';
+import { useRoomActions } from '../features/room-planner/useRoomActions';
 import { Button, Field, Input, Select, Badge, Loading, ErrorNotice } from '../components/atoms/ui';
 export function RoomPlanner() {
   const { data: templates, isPending } = useTemplates();
@@ -69,11 +73,27 @@ export function RoomPlanner() {
   useEffect(() => {
     localStorage.setItem('3dmantap:room', JSON.stringify(room));
   }, [room]);
+  const actions = useRoomActions(room, setRoom, templates ?? [], selectedWall, setError);
   if (isPending) return <Loading />;
   const all = templates ?? [],
     interior = all.filter((t) => t.studio === 'interior'),
     issues = validRoom(room);
   const selectedItem = room.items.find((i) => i.id === selected);
+  const selectedOpening = room.openings.find((o) => o.id === selectedItem?.openingId);
+  const selectObject = (id: string | null) => {
+    setSelected(id);
+    const opening = room.openings.find(
+      (o) => o.id === room.items.find((i) => i.id === id)?.openingId,
+    );
+    if (opening) setSelectedWall(opening.wall);
+  };
+  const addProduct = (template: (typeof all)[number], document?: SavedDesign['document']) => {
+    const id = actions.add(template, document);
+    if (id) {
+      selectObject(id);
+      setAdding(false);
+    }
+  };
   const selectedPartition = room.partitions.find((i) => i.id === selected);
   const width = Math.min(
       window.innerWidth > 1100 ? window.innerWidth - 620 : window.innerWidth - 40,
@@ -94,7 +114,7 @@ export function RoomPlanner() {
     const point = { x: (pos.x - offsetX) / scale, y: (pos.y - offsetY) / scale };
     setMeasurement((previous) => (previous.length === 2 ? [point] : [...previous, point]));
   };
-  const update = (patch: Partial<RoomProject>) => setRoom({ ...room, ...patch });
+  const update = actions.update;
   const wallLength = Math.hypot(
     room.points[(selectedWall + 1) % room.points.length].x - room.points[selectedWall].x,
     room.points[(selectedWall + 1) % room.points.length].y - room.points[selectedWall].y,
@@ -239,7 +259,6 @@ export function RoomPlanner() {
                 onClick={() => {
                   update({
                     points: room.points.filter((_, i) => i !== selectedWall),
-                    openings: [],
                   });
                   setSelectedWall(0);
                 }}
@@ -262,21 +281,11 @@ export function RoomPlanner() {
             <div className="artwork-actions">
               <Button
                 variant="secondary"
-                onClick={() =>
-                  update({
-                    openings: [
-                      ...room.openings,
-                      {
-                        id: crypto.randomUUID(),
-                        kind: 'door',
-                        wall: selectedWall,
-                        offset: Math.max(0, wallLength / 2 - 450),
-                        width: 900,
-                        height: 2100,
-                      },
-                    ],
-                  })
-                }
+                disabled={!interior.some((t) => t.modelKind === 'door')}
+                onClick={() => {
+                  const template = interior.find((t) => t.modelKind === 'door');
+                  if (template) addProduct(template);
+                }}
               >
                 + Pintu
               </Button>
@@ -309,7 +318,7 @@ export function RoomPlanner() {
                   <button
                     className="icon-button"
                     aria-label="Hapus bukaan"
-                    onClick={() => update({ openings: room.openings.filter((x) => x.id !== o.id) })}
+                    onClick={() => actions.removeOpening(o.id)}
                   >
                     <Trash2 size={14} />
                   </button>
@@ -319,10 +328,8 @@ export function RoomPlanner() {
                         type="number"
                         value={o[k] / 10}
                         onChange={(e) =>
-                          update({
-                            openings: room.openings.map((x) =>
-                              x.id === o.id ? { ...x, [k]: Number(e.target.value) * 10 } : x,
-                            ),
+                          actions.opening(o.id, {
+                            [k]: Math.max(k === 'offset' ? 0 : 300, Number(e.target.value) * 10),
                           })
                         }
                       />
@@ -375,7 +382,15 @@ export function RoomPlanner() {
           </div>
           {mode === '3d' ? (
             <div className="room-3d">
-              <RoomScene room={room} templates={all} context={shareContext} />
+              <RoomScene
+                room={room}
+                templates={all}
+                context={shareContext}
+                selected={selected}
+                onSelect={selectObject}
+                onMove={actions.move}
+                onMovePerson={actions.movePerson}
+              />
             </div>
           ) : (
             <div className="room-2d">
@@ -404,6 +419,7 @@ export function RoomPlanner() {
                             stroke={selectedWall === i ? '#24654b' : '#627567'}
                             strokeWidth={selectedWall === i ? 8 / scale : 5 / scale}
                             onClick={() => setSelectedWall(i)}
+                            onTap={() => setSelectedWall(i)}
                           />
                           <Circle
                             x={p.x}
@@ -446,6 +462,7 @@ export function RoomPlanner() {
                       />
                     ))}
                     {room.openings.map((o) => {
+                      if (!roomWall(room, o.wall)) return null;
                       const a = room.points[o.wall],
                         b = room.points[(o.wall + 1) % room.points.length],
                         length = Math.hypot(b.x - a.x, b.y - a.y),
@@ -466,30 +483,30 @@ export function RoomPlanner() {
                       );
                     })}
                     {room.items.map((item) => {
+                      const pose = roomItemPose(room, item);
                       const w = item.document.dimensions.width,
                         dep = item.document.dimensions.depth;
                       return (
                         <Group
                           key={item.id}
-                          x={item.x}
-                          y={item.y}
-                          rotation={item.rotation}
+                          x={pose.x}
+                          y={pose.y}
+                          rotation={pose.rotation}
                           draggable
+                          onDragStart={() => selectObject(item.id)}
+                          onDragMove={(e) => {
+                            const next = actions.move(item.id, {
+                              x: e.target.x(),
+                              y: e.target.y(),
+                            });
+                            e.target.position({ x: next.x, y: next.y });
+                            e.target.rotation(next.rotation ?? pose.rotation);
+                          }}
                           onDragEnd={(e) =>
-                            update({
-                              items: room.items.map((x) =>
-                                x.id === item.id
-                                  ? {
-                                      ...x,
-                                      x: Math.round(e.target.x() / 50) * 50,
-                                      y: Math.round(e.target.y() / 50) * 50,
-                                    }
-                                  : x,
-                              ),
-                            })
+                            actions.move(item.id, { x: e.target.x(), y: e.target.y() })
                           }
-                          onClick={() => setSelected(item.id)}
-                          onTap={() => setSelected(item.id)}
+                          onClick={() => selectObject(item.id)}
+                          onTap={() => selectObject(item.id)}
                         >
                           <Rect
                             x={-w / 2}
@@ -499,18 +516,53 @@ export function RoomPlanner() {
                             fill={item.document.color}
                             stroke={selected === item.id ? '#24654b' : '#776751'}
                             strokeWidth={selected === item.id ? 3 / scale : 1 / scale}
+                            hitStrokeWidth={12 / scale}
                           />
                           <Text
                             x={-w / 2 + 30}
-                            y={-dep / 2 + 30}
+                            y={item.openingId ? -45 / scale : -dep / 2 + 30}
                             width={w - 60}
                             text={item.document.name}
-                            fontSize={12 / scale}
+                            fontSize={item.openingId ? 10 / scale : 12 / scale}
                             fill="#20372b"
                           />
                         </Group>
                       );
                     })}
+                    {room.person && (
+                      <Group
+                        x={room.person.x}
+                        y={room.person.y}
+                        rotation={room.person.rotation}
+                        draggable
+                        onClick={() => selectObject('reference-person')}
+                        onTap={() => selectObject('reference-person')}
+                        onDragStart={() => selectObject('reference-person')}
+                        onDragMove={(e) => {
+                          const next = actions.movePerson({ x: e.target.x(), y: e.target.y() });
+                          if (next.person)
+                            e.target.position({ x: next.person.x, y: next.person.y });
+                        }}
+                      >
+                        <Ellipse
+                          radiusX={250}
+                          radiusY={150}
+                          fill="#677579"
+                          stroke={selected === 'reference-person' ? '#e86638' : '#42494c'}
+                          strokeWidth={2 / scale}
+                        />
+                        <Circle radius={95} fill="#c7b39d" />
+                        <Text
+                          x={-500}
+                          y={200}
+                          width={1000}
+                          align="center"
+                          text={'Manusia ' + room.person.height / 10 + ' cm'}
+                          fontSize={12 / scale}
+                          fill="#42494c"
+                        />
+                      </Group>
+                    )}
                     {measurement.length === 2 && (
                       <Group>
                         <Line
@@ -557,32 +609,33 @@ export function RoomPlanner() {
         <aside className="studio-summary">
           <span className="eyebrow">ISI RUANGANMU</span>
           <h3>Setiap benda, ada tempatnya.</h3>
+          <Button
+            variant="secondary"
+            className="full"
+            onClick={() => {
+              if (room.person) {
+                update({ person: undefined });
+                if (selected === 'reference-person') setSelected(null);
+              } else {
+                update({
+                  person: { ...roomInteriorPoint(room), height: 1700, rotation: 0 },
+                });
+                setSelected('reference-person');
+              }
+            }}
+          >
+            {room.person ? 'Sembunyikan manusia' : 'Tambah manusia 170 cm'}
+          </Button>
+          <p className="help-text">
+            Seret furnitur atau manusia di denah 2D dan ruang 3D. Pintu mengikuti dinding.
+          </p>
           <Button variant="secondary" className="full" onClick={() => setAdding(!adding)}>
             <Plus size={16} /> Tambah furnitur
           </Button>
           {adding && (
             <div className="room-product-list">
               {interior.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    const id = crypto.randomUUID();
-                    update({
-                      items: [
-                        ...room.items,
-                        {
-                          id,
-                          document: createDesign(t),
-                          x: (maxX + minX) / 2,
-                          y: (maxY + minY) / 2,
-                          rotation: 0,
-                        },
-                      ],
-                    });
-                    setSelected(id);
-                    setAdding(false);
-                  }}
-                >
+                <button key={t.id} onClick={() => addProduct(t)}>
                   {t.name}
                   <Plus size={14} />
                 </button>
@@ -593,15 +646,8 @@ export function RoomPlanner() {
                   <button
                     key={x.id}
                     onClick={() => {
-                      const id = crypto.randomUUID();
-                      update({
-                        items: [
-                          ...room.items,
-                          { id, document: x.document, x: 2500, y: 2000, rotation: 0 },
-                        ],
-                      });
-                      setSelected(id);
-                      setAdding(false);
+                      const template = interior.find((t) => t.id === x.document.templateId);
+                      if (template) addProduct(template, x.document);
                     }}
                   >
                     <Save size={14} />
@@ -613,53 +659,130 @@ export function RoomPlanner() {
           {selectedItem ? (
             <>
               <h4>{selectedItem.document.name}</h4>
-              {(['x', 'y', 'rotation'] as const).map((k) => (
-                <Field
-                  key={k}
-                  label={{ x: 'Posisi X (cm)', y: 'Posisi Y (cm)', rotation: 'Rotasi (°)' }[k]}
-                >
-                  <Input
-                    type="number"
-                    value={k === 'rotation' ? selectedItem[k] : selectedItem[k] / 10}
-                    onChange={(e) =>
-                      update({
-                        items: room.items.map((x) =>
-                          x.id === selected
-                            ? { ...x, [k]: Number(e.target.value) * (k === 'rotation' ? 1 : 10) }
-                            : x,
-                        ),
-                      })
-                    }
-                  />
-                </Field>
-              ))}
+              {room.person && (
+                <HeightComparison
+                  personHeight={room.person.height}
+                  productHeight={selectedItem.document.dimensions.height}
+                  productName={selectedItem.document.name}
+                />
+              )}
+              {selectedOpening ? (
+                <>
+                  <p className="help-text">
+                    Pintu menempel pada Dinding {selectedOpening.wall + 1}.
+                  </p>
+                  <Field label="Dinding pintu">
+                    <Select
+                      value={selectedOpening.wall}
+                      onChange={(e) => {
+                        const index = Number(e.target.value),
+                          wall = roomWall(room, index);
+                        if (wall) {
+                          actions.move(
+                            selectedItem.id,
+                            { x: (wall.a.x + wall.b.x) / 2, y: (wall.a.y + wall.b.y) / 2 },
+                            index,
+                          );
+                          setSelectedWall(index);
+                        }
+                      }}
+                    >
+                      {room.points.map((_, i) => (
+                        <option key={i} value={i}>
+                          Dinding {i + 1}
+                        </option>
+                      ))}
+                    </Select>
+                  </Field>
+                  <Field label="Posisi sepanjang dinding (cm)">
+                    <Input
+                      type="number"
+                      min={0}
+                      step={5}
+                      value={selectedOpening.offset / 10}
+                      onChange={(e) =>
+                        actions.opening(selectedOpening.id, {
+                          offset: Math.max(0, Number(e.target.value) * 10),
+                        })
+                      }
+                    />
+                  </Field>
+                </>
+              ) : (
+                (['x', 'y', 'rotation'] as const).map((k) => (
+                  <Field
+                    key={k}
+                    label={{ x: 'Posisi X (cm)', y: 'Posisi Y (cm)', rotation: 'Rotasi (°)' }[k]}
+                  >
+                    <Input
+                      type="number"
+                      value={k === 'rotation' ? selectedItem[k] : selectedItem[k] / 10}
+                      onChange={(e) =>
+                        update({
+                          items: room.items.map((x) =>
+                            x.id === selected
+                              ? { ...x, [k]: Number(e.target.value) * (k === 'rotation' ? 1 : 10) }
+                              : x,
+                          ),
+                        })
+                      }
+                    />
+                  </Field>
+                ))
+              )}
               <Button
                 variant="ghost"
-                onClick={() =>
-                  update({
-                    items: [
-                      ...room.items,
-                      {
-                        ...selectedItem,
-                        id: crypto.randomUUID(),
-                        x: selectedItem.x + 200,
-                        y: selectedItem.y + 200,
-                      },
-                    ],
-                  })
-                }
+                onClick={() => {
+                  const id = actions.duplicate(selectedItem.id);
+                  if (id) selectObject(id);
+                }}
               >
                 <Copy size={15} /> Duplikat
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => {
-                  update({ items: room.items.filter((x) => x.id !== selected) });
+                  actions.remove(selectedItem.id);
                   setSelected(null);
                 }}
               >
                 <Trash2 size={15} /> Hapus
               </Button>
+            </>
+          ) : selected === 'reference-person' && room.person ? (
+            <>
+              <h4>Manusia pembanding</h4>
+              <Field label="Tinggi manusia (cm)">
+                <Input
+                  type="number"
+                  min={100}
+                  max={220}
+                  value={room.person.height / 10}
+                  onChange={(e) =>
+                    update({
+                      person: {
+                        ...room.person!,
+                        height: Math.max(100, Math.min(220, Number(e.target.value))) * 10,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              {(['x', 'y'] as const).map((axis) => (
+                <Field key={axis} label={'Posisi manusia ' + axis.toUpperCase() + ' (cm)'}>
+                  <Input
+                    type="number"
+                    step={5}
+                    value={room.person![axis] / 10}
+                    onChange={(e) =>
+                      actions.movePerson({ ...room.person!, [axis]: Number(e.target.value) * 10 })
+                    }
+                  />
+                </Field>
+              ))}
+              <p className="help-text">
+                Tinggi pembanding digunakan bersama ukuran pintu dan furnitur.
+              </p>
             </>
           ) : selectedPartition ? (
             <>

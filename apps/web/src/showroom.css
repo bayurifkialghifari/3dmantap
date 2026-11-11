@@ -4,6 +4,65 @@
   font-weight: 100 900;
   font-display: swap;
 }
+.try-on-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  z-index: 2;
+}
+.try-on-toggle button {
+  padding: 10px 14px;
+  background: #f7f7f5;
+  border: 1px solid #dededb;
+  color: #242426;
+  font-size: 11px;
+}
+.try-on-toggle button[aria-pressed='true'] {
+  background: #242426;
+  color: white;
+}
+.studio-canvas .try-on-toggle {
+  top: 70px;
+}
+.height-comparison {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  margin: 22px 0;
+  padding: 18px;
+  border: 1px solid #dededb;
+}
+.height-comparison > div {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+.height-comparison span {
+  font-size: 10px;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.height-comparison i {
+  display: block;
+  width: 22px;
+  background: #667573;
+}
+.height-comparison > div + div i {
+  background: #bd9570;
+}
+.height-comparison strong {
+  font-size: 12px;
+  font-weight: 500;
+}
 :root {
   font-family: StudioGrotesk, Helvetica, Arial, sans-serif;
   background: #f7f7f5;
@@ -619,6 +678,15 @@ h3 {
 }
 .studio-canvas {
   background: #ededeb;
+}
+@media (min-width: 901px) {
+  .room-workspace .workspace-body {
+    height: max(696px, calc(100dvh - 154px));
+  }
+  .room-workspace .studio-summary {
+    min-height: 0;
+    overflow: auto;
+  }
 }
 .canvas-mode {
   border: 1px solid #dededb;

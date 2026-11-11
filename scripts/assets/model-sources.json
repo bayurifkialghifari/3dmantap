@@ -126,5 +126,16 @@
         "sha256": "e494b67439da73775413d6aaea369ae05a8ebd7705be8df08dbcd2ee4fd545e4"
       }
     ]
+  },
+  {
+    "name": "avatar",
+    "format": "glb",
+    "files": [
+      {
+        "path": "model.glb",
+        "url": "https://raw.githubusercontent.com/kblood/CharacterCreator/852e48f316b90a0937234886630e4fb4cdfd1f78/output/base_body.glb",
+        "sha256": "b5b450af89f6fbf8debf387eda8da40cd0a8c3253a2d59871c730ce7e7f46469"
+      }
+    ]
   }
 ]

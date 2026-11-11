@@ -1,4 +1,5 @@
 import { designSchema } from './contracts';
+import { roomAttachmentIssues } from './room-placement';
 import type {
   DesignDocument,
   ProductTemplate,
@@ -264,7 +265,7 @@ export const rupiah = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 export function validRoom(room: RoomProject): string[] {
-  const issues: string[] = [];
+  const issues: string[] = roomAttachmentIssues(room);
   let area = 0;
   room.points.forEach((p, i) => {
     const n = room.points[(i + 1) % room.points.length];

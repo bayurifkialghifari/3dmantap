@@ -10,6 +10,12 @@ Furnitur 3D memakai GLB yang sama dengan detail/editor produk. Tampilan cutaway 
 
 ## Kontrak dan data
 
+Tambah Pintu membuat produk dan bukaan terhubung melalui openingId. Seret dalam 2D/3D untuk memproyeksikan pintu ke celah dinding terdekat, menjepitnya ke batas sudut, dan menyelaraskan rotasinya. Panel Dinding pintu dapat memilih dinding lain; posisi sepanjang dinding memakai cm. Ukuran bukaan menjadi ukuran daun pintu. Perubahan dinding menyelaraskan kembali posisi; perubahan jumlah sudut memproyeksikan bukaan ke dinding baru. Duplikat membuat link baru; penghapusan menghapus pasangan item/bukaan. Backend menolak link salah, pintu tanpa dinding, produk non-interior dan bukaan bertumpuk.
+
+Furnitur dan manusia dapat diseret langsung dalam kedua mode. Orbit berhenti selama drag 3D dan kembali aktif saat pointer dilepas. Snap 5 cm berlaku pada pusat objek; pusat harus berada di dalam polygon. Belum ada pemeriksaan tabrakan antar furnitur atau seluruh footprint. Pintu menempel pada dinding luar; partisi belum menerima pintu. Bukaan yang terlalu besar setelah perubahan ruang harus diperbaiki sebelum simpan.
+
+Manusia default 170 cm selalu berpakaian. Bisa disembunyikan, diatur 100–220 cm, dipindah dan ikut simpan/bagikan/ekspor. Panel furnitur membandingkan tingginya dengan manusia. Denah 2D menampilkan posisi dari atas dan label tinggi; bukan tampak elevasi. [Panduan manusia](human-preview.md).
+
 RoomProject; GET/POST /library/rooms
 
 ## Acceptance criteria

@@ -149,11 +149,22 @@ export const roomSchema = z.object({
         x: z.number(),
         y: z.number(),
         rotation: z.number(),
+        openingId: z.string().optional(),
       }),
     )
     .max(60),
+  person: z
+    .object({
+      x: z.number().finite(),
+      y: z.number().finite(),
+      rotation: z.number().finite(),
+      height: z.number().min(1000).max(2200),
+    })
+    .optional(),
 });
 export type RoomProject = z.infer<typeof roomSchema>;
+export type RoomItem = RoomProject['items'][number];
+export type RoomOpening = RoomProject['openings'][number];
 export const statuses = [
   'submitted',
   'consulting',

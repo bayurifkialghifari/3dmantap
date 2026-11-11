@@ -59,6 +59,11 @@ for (const pack of sources) {
       .getRoot()
       .listNodes()
       .forEach((node) => node.setWeights([]));
+    if (name === 'avatar')
+      await doc.transform(
+        prune(),
+        textureCompress({ encoder: sharp, resize: [1024, 1024], quality: 88 }),
+      );
     // The source tee carries a mannequin logo. Use plain cotton for customer artwork.
     if (name === 'tshirt')
       doc
