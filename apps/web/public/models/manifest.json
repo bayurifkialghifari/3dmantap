@@ -1,23 +1,23 @@
 [
   {
     "file": "tshirt.glb",
-    "sha256": "0afefdcac987aad5d455b7d66deb5f15bf1635f222ed757885c90a1bb6a9848c",
-    "bytes": 78168
+    "sha256": "fe391c6ac09625f1c0da48cc40c640a200af45e82f6cd5fcc18496a5da60432b",
+    "bytes": 135604
   },
   {
     "file": "hoodie.glb",
-    "sha256": "f29033d472364a6a0a95e85f8bd5a0b5a7be71117b2cb48e6825d134c0c598a1",
-    "bytes": 202632
+    "sha256": "1c45592ef7ad77d77dd041b57b17e26909b0011c12805eda4fc3a130bcabf1f9",
+    "bytes": 314368
   },
   {
     "file": "jacket.glb",
-    "sha256": "8a6a90c648cdbcfe6a5f8c790b6917b5e7dba0bc4e4a0ee7c6003f5bff618f18",
-    "bytes": 239348
+    "sha256": "b43a2627ed434fa1c2145b0bbb0d464aa84ae984d11bcd8f9c800dcce4e7044d",
+    "bytes": 376868
   },
   {
     "file": "jeans.glb",
-    "sha256": "959d7ff6d50cd70fbd74934e0b4ae955d8dde9b3cedb2ce9f5e871b90bbbf194",
-    "bytes": 179196
+    "sha256": "814bb9169b722c9dedefc7c8b3a8d5da3c3452c5bf078b3096d0280f43c1ef75",
+    "bytes": 239704
   },
   {
     "file": "sneaker.glb",
@@ -41,7 +41,7 @@
   },
   {
     "file": "avatar.glb",
-    "sha256": "6fa85d454438f111c8545bcbf993fb9a69b225e63e4d4939de91c65a6fabe410",
-    "bytes": 1910328
+    "sha256": "2db9dad2ca1b48777c6475f19a519765b12ed0f18d0edeb2d871e22c182fd2a5",
+    "bytes": 2742892
   }
 ]

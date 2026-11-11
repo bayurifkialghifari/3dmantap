@@ -75,7 +75,16 @@ test('bundled GLBs match their manifest and contain finite, self-contained mesh 
         const positions = primitive.getAttribute('POSITION')!;
         expect(positions.getCount()).toBeGreaterThan(3);
         expect(Array.from(positions.getArray()!).every(Number.isFinite)).toBe(true);
-        expect(primitive.listTargets()).toHaveLength(0);
+        if (
+          ['avatar', 'tshirt', 'hoodie', 'jacket', 'jeans'].some((n) => asset.file === n + '.glb')
+        ) {
+          expect(primitive.listTargets()).toHaveLength(8);
+          expect(mesh.getExtras().targetNames).toEqual(
+            primitive.listTargets().map((t) => t.getName()),
+          );
+          expect(primitive.getAttribute('JOINTS_0')).not.toBeNull();
+          expect(primitive.getAttribute('WEIGHTS_0')).not.toBeNull();
+        } else expect(primitive.listTargets()).toHaveLength(0);
       }
   }
 });

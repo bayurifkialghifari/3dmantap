@@ -7,6 +7,7 @@ import { mkdir } from 'node:fs/promises';
 import { resolve, relative, dirname, isAbsolute } from 'node:path';
 import sources from './assets/model-sources.json';
 import { furnitureParts } from './assets/furniture-parts';
+import { avatarMorphs } from './assets/avatar-morphs';
 
 const root = resolve(import.meta.dir, '..');
 const output = resolve(root, 'apps/web/public/models');
@@ -47,14 +48,30 @@ for (const pack of sources) {
     await furnitureParts(doc);
     name = 'furniture-parts';
   } else {
+    const character = ['avatar', 'tshirt', 'hoodie', 'jacket', 'jeans'].includes(name);
     doc
       .getRoot()
       .listMeshes()
       .forEach((mesh) =>
-        mesh
-          .listPrimitives()
-          .forEach((p) => p.listTargets().forEach((target) => p.removeTarget(target))),
+        mesh.listPrimitives().forEach((p) =>
+          p.listTargets().forEach((target) => {
+            if (!character || !avatarMorphs.includes(target.getName())) p.removeTarget(target);
+          }),
+        ),
       );
+    for (const mesh of doc.getRoot().listMeshes()) {
+      mesh.setWeights([]);
+      mesh.setExtras(
+        character
+          ? {
+              targetNames: mesh
+                .listPrimitives()[0]
+                .listTargets()
+                .map((t) => t.getName()),
+            }
+          : {},
+      );
+    }
     doc
       .getRoot()
       .listNodes()
@@ -125,3 +142,4 @@ for (const pack of sources) {
   console.log('Prepared ' + file + ': ' + (bytes.length / 1024).toFixed(0) + ' KB');
 }
 await Bun.write(resolve(output, 'manifest.json'), JSON.stringify(built, null, 2) + '\n');
+await import('./calibrate-avatar');

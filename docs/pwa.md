@@ -4,7 +4,7 @@
 
 Manifest, service worker, ikon aplikasi dan shell statis memungkinkan instalasi web app. Draft editor dan ruangan disimpan lokal. Submit, pembayaran, akun dan server library memerlukan jaringan. API, bukti pembayaran dan file privat tidak diprecache.
 
-Model GLB default, thumbnail WebP dan font WOFF2 ikut precache statis. Setiap GLB yang dibundel berukuran di bawah batas 5 MB; total sembilan GLB sekitar 8,3 MiB termasuk avatar. Model toko/asset privat yang diambil dari API memerlukan jaringan dan tidak diprecache. Warna manifest mengikuti tampilan studio netral.
+Model GLB default, thumbnail WebP dan font WOFF2 ikut precache statis. Setiap GLB yang dibundel berukuran di bawah batas 5 MB; total sembilan GLB sekitar 9,3 MiB termasuk avatar. Model toko/asset privat yang diambil dari API memerlukan jaringan dan tidak diprecache. Warna manifest mengikuti tampilan studio netral.
 
 ## Kontrak dan data
 

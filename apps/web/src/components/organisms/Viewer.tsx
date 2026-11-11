@@ -1,4 +1,4 @@
-import { Suspense, useState, Component, type ReactNode } from 'react';
+import { Suspense, useState, useCallback, useEffect, Component, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   OrbitControls,
@@ -8,7 +8,12 @@ import {
   useProgress,
 } from '@react-three/drei';
 import * as THREE from 'three';
-import { type ProductTemplate, type DesignDocument } from '@3dmantap/shared';
+import {
+  type ProductTemplate,
+  type DesignDocument,
+  type AvatarJoint,
+  type AvatarProfile,
+} from '@3dmantap/shared';
 import { RotateCcw, Move3D } from 'lucide-react';
 import { ProductIllustration } from '../molecules/ProductIllustration';
 import { ProductModel, type AssetContext } from '../../features/editor/ProductModel';
@@ -39,15 +44,36 @@ export function Viewer({
   context,
   interactive = true,
   capture = false,
+  forceWorn = false,
+  joint,
+  onSelectJoint,
+  onAvatarChange,
 }: {
   template: ProductTemplate;
   document: DesignDocument;
   context?: AssetContext;
   interactive?: boolean;
   capture?: boolean;
+  forceWorn?: boolean;
+  joint?: AvatarJoint | null;
+  onSelectJoint?: (joint: AvatarJoint | null) => void;
+  onAvatarChange?: (profile: AvatarProfile) => void;
 }) {
   const [reset, setReset] = useState(0);
   const [worn, setWorn] = useState(false);
+  useEffect(() => {
+    if (forceWorn) setWorn(true);
+  }, [forceWorn]);
+  const [poseDragging, setPoseDragging] = useState(false);
+  const [frame, setFrame] = useState({ height: 1.7, width: 0.7, depth: 0.4, x: 0, z: 0 });
+  const onBounds = useCallback((b: THREE.Box3) => {
+    const s = b.getSize(new THREE.Vector3()),
+      c = b.getCenter(new THREE.Vector3());
+    setFrame((previous) => {
+      const next = { height: s.y, width: s.x, depth: s.z, x: c.x, z: c.z };
+      return JSON.stringify(previous) === JSON.stringify(next) ? previous : next;
+    });
+  }, []);
   const canTryOn =
     template.studio === 'fashion' &&
     ['shirt', 'hoodie', 'jacket', 'pants'].includes(template.modelKind) &&
@@ -56,9 +82,9 @@ export function Viewer({
   const scale =
     1.8 /
     (wearing
-      ? 1.7
+      ? Math.max(frame.height, frame.width, frame.depth)
       : Math.max(document.dimensions.height / 1000, document.dimensions.width / 1000, 0.3));
-  const floorY = (wearing ? -0.85 : -document.dimensions.height / 2000) * scale;
+  const floorY = (wearing ? -frame.height / 2 : -document.dimensions.height / 2000) * scale;
   return (
     <div className={'viewer' + (capture ? ' capture-viewer' : '')}>
       <CanvasBoundary
@@ -102,7 +128,24 @@ export function Viewer({
             </Environment>
             <group position={[0, floorY, 0]} scale={scale}>
               {wearing ? (
-                <HumanModel template={template} document={document} context={context} />
+                <group position={[-frame.x, 0, -frame.z]}>
+                  <HumanModel
+                    template={template}
+                    document={document}
+                    context={context}
+                    onBounds={onBounds}
+                    editing={
+                      onAvatarChange && onSelectJoint
+                        ? {
+                            joint: joint ?? null,
+                            onSelect: onSelectJoint,
+                            onChange: onAvatarChange,
+                            onDragging: setPoseDragging,
+                          }
+                        : undefined
+                    }
+                  />
+                </group>
               ) : (
                 <ProductModel template={template} document={document} context={context} />
               )}
@@ -117,6 +160,8 @@ export function Viewer({
             />
           </Suspense>
           <OrbitControls
+            makeDefault
+            enabled={!poseDragging}
             enablePan={false}
             enableZoom={interactive}
             enableRotate={interactive}
@@ -131,7 +176,12 @@ export function Viewer({
           <button onClick={() => setWorn(!worn)} aria-pressed={wearing}>
             {wearing ? 'Lihat produk saja' : 'Preview dipakai'}
           </button>
-          {wearing && <span>Manusia 170 cm</span>}
+          {wearing && (
+            <span>
+              Manusia{' '}
+              {(document.avatar?.height ?? (document.avatarRecipe?.stature ?? 1.7) * 1000) / 10} cm
+            </span>
+          )}
         </div>
       )}
       {!capture && (
