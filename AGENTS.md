@@ -4,6 +4,8 @@
 - Frontend follows atomic design: atoms, molecules, organisms, templates, pages. Keep domain logic, hooks, and stores outside presentational UI.
 - Backend is a modular Hono application. Routes validate shared contracts, services enforce business rules, repositories handle persistence.
 - Physical geometry and artwork use millimeters. Money uses integer Indonesian Rupiah. Never calculate production eligibility only in the frontend.
+- Avatar measurements use millimeters and weight grams. Keep raw profiles owner/CMS scoped; public design, room and WhatsApp previews must project rendering recipes and strip nested private profiles.
+- Fit sourced body and compatible garments with the same bind rig. Worn artwork uses UVs so it follows skinning; preserve standing stature and test posed grounding independently of parent scene transforms.
 - Submission must persist in CMS before offering WhatsApp consultation. WhatsApp navigation never proves consultation or approval.
 - Freeze approved design/quote revisions. Production requires matching customer approval, admin confirmation, and verified required payment.
 - Validate uploads, keep proofs/production files private, and scope designs/inquiries to account or secure visitor/access tokens.

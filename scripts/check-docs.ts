@@ -7,6 +7,7 @@ const names = [
   'templates',
   'fashion-editor',
   'human-preview',
+  'body-poses',
   'interior-editor',
   'artwork',
   'room-planner',
@@ -35,4 +36,6 @@ for (const path of [
   const content = await Bun.file(path).text();
   if (content.length < 100) throw new Error('Empty documentation: ' + path);
 }
-console.log('Documentation complete: 21 feature documents and required project guides.');
+console.log(
+  'Documentation complete: ' + names.length + ' feature documents and required project guides.',
+);

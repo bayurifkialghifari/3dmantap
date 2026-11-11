@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.0 — 2026-11-12
+
+### Added
+
+- Male/female bodies with height, weight, calibrated circumference/shoulder/arm/inside-leg controls and optional manual overrides.
+- Five pose presets, joint selection, local 3D rotation handles and bounded numeric/sliding controls; independent body and pose resets.
+- Profile persistence in Studio history/autosave, detail-to-Studio selection, cloud designs, rooms and private CMS snapshots.
+- Public avatar rendering recipes for design/room/WhatsApp previews, preserving visuals while excluding raw measurements and weight.
+- Reproducible gender/weight corrective morph retention, body calibration and fitted 53-bone rigs for all four built-in garments.
+- UV-baked worn artwork that follows fitted geometry and skeletal poses, plus geometry/privacy/browser coverage.
+
+### Fixed
+
+- Posed bounds and ground placement remain independent of viewer scaling; sitting does not alter anatomical stature.
+- Room person height is canonicalized from the private profile. Public room copies preserve their visual recipe.
+
+### Limits
+
+- Visual measurement targets do not certify fit or produce sewing patterns. Extreme poses/proportions can intersect cloth/body; no cloth simulation, animation or uploaded garment rig support.
+
 ## 0.3.0 — 2026-11-11
 
 ### Added

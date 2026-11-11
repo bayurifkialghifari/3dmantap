@@ -27,18 +27,22 @@ The UI is **Bahasa Indonesia**, with integer IDR prices and dimensions stored in
 
 **[Watch or download the video (MP4)](docs/media/demo.mp4)** · [Recording and asset credits](docs/media/README.md)
 
-Recorded from the local application with synthetic designs. The demo shows the storefront, fashion catalog, artwork on worn clothing, furniture movement in 2D and room preview in 3D. It does not submit a customer order.
+[![Body measurements and pose editor demo](docs/media/avatar-demo.gif)](docs/media/avatar-demo.mp4)
+
+**[Watch body measurements & poses (MP4)](docs/media/avatar-demo.mp4)** — male/female selection, manual body measurements, presets, joint controls and a seated room reference.
+
+Recorded from the local application with synthetic designs. The demos show the storefront, fashion catalog, artwork on worn clothing, male/female bodies, measurement controls, poses and room planning. It does not submit a customer order.
 
 ## Features
 
-| Studio          | Included behavior                                                                                                                                                                             |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Fashion         | Shirts, hoodies, jackets, pants, hats, sneakers and bags; colors, sizes, quantities and uploaded artwork. Built-in shirts/hoodies/jackets/pants have worn previews on a clothed 170 cm human. |
-| Interior        | Parametric cabinets, shelves, desks, sideboards, doors and panels; dimensions, materials, doors/drawers, artwork and physical panel geometry.                                                 |
-| Room planner    | Polygon rooms, editable corners, partitions, windows and wall-mounted doors. Drag furniture and a reference human in 2D/3D, compare heights and export PNG/SVG/JSON.                          |
-| Business CMS    | Product templates, inquiries, consultation notes, quote revisions, customer approval, verified transfers, progress photos and production jobs.                                                |
-| Production      | Text/image layers, physical print surfaces, 300 DPI artwork, actual-size PDF, print tiles and furniture cut lists from the approved revision.                                                 |
-| Library and PWA | Autosave, cloud designs, token-based sharing, accounts and offline public models/fonts/drafts. Private API files stay outside offline caching.                                                |
+| Studio          | Included behavior                                                                                                                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fashion         | Shirts, hoodies, jackets, pants, hats, sneakers and bags; colors, sizes, quantities and uploaded artwork. Built-in garments follow male/female bodies with measurements, poses and UV artwork. |
+| Interior        | Parametric cabinets, shelves, desks, sideboards, doors and panels; dimensions, materials, doors/drawers, artwork and physical panel geometry.                                                  |
+| Room planner    | Polygon rooms, editable corners, partitions, windows and wall-mounted doors. Drag furniture and a reference human in 2D/3D, compare heights and export PNG/SVG/JSON.                           |
+| Business CMS    | Product templates, inquiries, consultation notes, quote revisions, customer approval, verified transfers, progress photos and production jobs.                                                 |
+| Production      | Text/image layers, physical print surfaces, 300 DPI artwork, actual-size PDF, print tiles and furniture cut lists from the approved revision.                                                  |
+| Library and PWA | Autosave, cloud designs, token-based sharing, accounts and offline public models/fonts/drafts. Private API files stay outside offline caching.                                                 |
 
 ## Screenshots
 
@@ -47,6 +51,12 @@ Recorded from the local application with synthetic designs. The demo shows the s
 | ![Fashion Studio with artwork on a worn shirt](docs/media/fashion-studio.png) | ![Room Planner with furniture, a door and a human](docs/media/room-planner.png) |
 
 ![Fashion catalog with sourced renders and corrected sneaker proportions](docs/media/fashion-catalog.png)
+
+| Body measurements                                                     | Joint poses                                                                   |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| ![Female body with custom measurements](docs/media/avatar-editor.png) | ![Bounded pose editor with a 3D rotation handle](docs/media/avatar-poses.png) |
+
+Private measurement profiles stay with the design/room and consultation snapshot. Public links carry the visual body/pose recipe. See [body measurements & poses](docs/body-poses.md).
 
 ## Get started
 
@@ -129,7 +139,7 @@ bun run models:previews
 bun run models:previews shoe
 ```
 
-Worn previews are static illustrations. They do not simulate cloth, fit or a customer's body; hats, shoes, bags and arbitrary uploaded GLBs are not fitted to the human. Room placement checks object centers and wall-opening gaps, without furniture collision detection. Production packets do not generate sewing patterns, embroidery or CNC toolpaths. See [human preview](docs/human-preview.md) and [model sources](docs/model-assets.md).
+Worn previews support visual body measurements and joint poses. They do not simulate cloth or certify garment fit; hats, shoes, bags and arbitrary uploaded GLBs are not fitted to the human. Room placement checks object centers and wall-opening gaps, without furniture collision detection. Production packets do not generate sewing patterns, embroidery or CNC toolpaths. See [human preview](docs/human-preview.md) and [model sources](docs/model-assets.md).
 
 ## Deployment
 

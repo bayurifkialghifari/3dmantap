@@ -7,3 +7,5 @@ The walkthrough covers the storefront, catalog, custom text on a worn shirt, 2D 
 Media includes renders of bundled third-party models. Human, garments and cabinet components are CC0. The sneaker is © 2021 Shopify, CC BY 4.0, with modified material variant, texture resolution and scale. Creators do not endorse this application. Full sources, modifications and license links are in [model-assets.md](../model-assets.md); fonts use the bundled SIL Open Font License files.
 
 Public media is maintained as documentation. Temporary recordings, traces, capture scripts and encoding tools stay in ignored .data storage.
+
+avatar-demo.mp4 and avatar-demo.gif demonstrate the 0.4 body editor: male/female choice, height/waist/arm controls, the five presets, a joint handle and a seated room reference. avatar-editor.png, avatar-poses.png and avatar-room.png show the same synthetic session. Fashion/room screenshots were refreshed using the fitted body renderer. Captures do not call submission, cloud save, admin or WhatsApp endpoints.
