@@ -10,4 +10,5 @@
 - Update PRD.md, CHANGELOG.md, architecture.md and relevant docs when behavior changes. Feature documents describe actual behavior and limitations.
 - Use atomic Conventional Commits: one coherent change including its contracts, relevant tests, and documentation. Do not commit secrets, generated database files, or artifacts.
 - Product preview geometry comes from sourced GLBs. Record model source, license, modifications and SHA-256 integrity; use models:prepare and models:previews when updating bundled runtime assets. Keep private API assets outside PWA caching.
+- Public documentation screenshots/demo media may be committed when captured with synthetic data. Keep source credits and exclude customer records, credentials, uploads and payment proofs.
 - Before delivery run lint, format:check, typecheck, test, test:e2e, and build. Add meaningful tests for geometry, permissions, approval gates, and exports.

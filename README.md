@@ -1,42 +1,109 @@
+<div align="center">
+
 # 3DMantap
 
-Web + PWA untuk custom Fashion dan Interior, dengan preview produk 3D, room planner, dan CMS konsultasi sebelum produksi. Seluruh aplikasi memakai TypeScript, Bun, React/Vite, Hono, MySQL dan Drizzle.
+**Design it. See it in 3D. Consult before production.**
 
-## Jalankan lokal
+An open-source customization studio for fashion, furniture and the spaces they belong in.
 
-Prasyarat: Bun 1.4+, Git, dan MySQL 8.4+. Pada Windows, setup mendeteksi mysqld dari PATH (termasuk FlyEnv), membuat database lokal terisolasi di .data/mysql, lalu menjalankannya pada 127.0.0.1:33307.
+[![Quality](https://github.com/bayurifkialghifari/3dmantap/actions/workflows/quality.yml/badge.svg)](https://github.com/bayurifkialghifari/3dmantap/actions/workflows/quality.yml)
+[![MIT](https://img.shields.io/badge/code-MIT-242426.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6.svg)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/runtime-Bun-f9f1e1.svg)](https://bun.sh/)
+
+[Get started](#get-started) · [Watch the demo](#demo) · [Documentation](docs/README.md) · [Contribute](CONTRIBUTING.md)
+
+</div>
+
+![3DMantap storefront](docs/media/storefront.png)
+
+3DMantap combines product customization, a 2D/3D room planner and a consultation CMS in one TypeScript application. Add artwork, preview clothing on a person, place furniture at physical scale and submit a design for review over WhatsApp before production.
+
+The UI is **Bahasa Indonesia**, with integer IDR prices and dimensions stored in millimeters. This release supports a single business. Starter products and prices are demonstration data.
+
+## Demo
+
+[![Walkthrough: artwork, worn clothing and room planning](docs/media/demo.gif)](docs/media/demo.mp4)
+
+**[Watch or download the video (MP4)](docs/media/demo.mp4)** · [Recording and asset credits](docs/media/README.md)
+
+Recorded from the local application with synthetic designs. The demo shows the storefront, fashion catalog, artwork on worn clothing, furniture movement in 2D and room preview in 3D. It does not submit a customer order.
+
+## Features
+
+| Studio          | Included behavior                                                                                                                                                                             |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fashion         | Shirts, hoodies, jackets, pants, hats, sneakers and bags; colors, sizes, quantities and uploaded artwork. Built-in shirts/hoodies/jackets/pants have worn previews on a clothed 170 cm human. |
+| Interior        | Parametric cabinets, shelves, desks, sideboards, doors and panels; dimensions, materials, doors/drawers, artwork and physical panel geometry.                                                 |
+| Room planner    | Polygon rooms, editable corners, partitions, windows and wall-mounted doors. Drag furniture and a reference human in 2D/3D, compare heights and export PNG/SVG/JSON.                          |
+| Business CMS    | Product templates, inquiries, consultation notes, quote revisions, customer approval, verified transfers, progress photos and production jobs.                                                |
+| Production      | Text/image layers, physical print surfaces, 300 DPI artwork, actual-size PDF, print tiles and furniture cut lists from the approved revision.                                                 |
+| Library and PWA | Autosave, cloud designs, token-based sharing, accounts and offline public models/fonts/drafts. Private API files stay outside offline caching.                                                |
+
+## Screenshots
+
+| Customize clothing                                                            | Plan a room at physical scale                                                   |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| ![Fashion Studio with artwork on a worn shirt](docs/media/fashion-studio.png) | ![Room Planner with furniture, a door and a human](docs/media/room-planner.png) |
+
+![Fashion catalog with sourced renders and corrected sneaker proportions](docs/media/fashion-catalog.png)
+
+## Get started
+
+Install **Bun 1.4.4+**, **Git** and **MySQL 8.4+**. Chromium is needed for browser tests and thumbnail capture.
 
 ```sh
-bun install
+git clone https://github.com/bayurifkialghifari/3dmantap.git
+cd 3dmantap
+bun install --frozen-lockfile
 bun run setup
+```
+
+Setup creates environment secrets and an admin password at **.data/bootstrap-admin.txt**. On Windows, if mysqld is on PATH, it initializes an isolated development database in .data/mysql and starts it on **127.0.0.1:33307**.
+
+On Linux/macOS, or with your own database, set DATABASE_URL in .env before migrating. Use an account permitted to create/migrate the configured database. Setup preserves existing environment files; seeding preserves edited templates/settings.
+
+```sh
 bun run db:migrate
 bun run db:seed
 bun run dev
 ```
 
-Buka **http://localhost:5173**. API berjalan pada port 3001. Setup membuat .env dengan secret dan password acak; kredensial admin ada di **.data/bootstrap-admin.txt**. Masuk melalui /login, lalu buka /admin. File .env dan .data tidak dikomit.
+Open **http://localhost:5173**. The API uses **3001**; dev also starts the export worker. Sign in at /login with the generated credentials, then open /admin for CMS.
 
-Jika memakai MySQL sendiri atau Linux/macOS, jalankan setup untuk environment, lalu sesuaikan DATABASE_URL sebelum migrations. db:seed idempotent dan tidak menimpa template/pengaturan yang sudah diubah.
+## Consultation comes first
 
-## Alur pelanggan dan pengelola
+1. Customers customize a product and submit their design and requirements.
+2. The submission and snapshot persist in CMS before the WhatsApp action appears.
+3. The customer sends the WhatsApp message; admin records the consultation outcome.
+4. Admin publishes the final design/quote revision. The customer approves that current revision.
+5. The customer uploads transfer evidence; admin verifies the required payment.
+6. The backend permits production and the worker creates a revision-bound packet.
 
-1. Pilih Fashion atau Interior, buka preview 3D, lalu custom ukuran/warna dan artwork.
-2. Simpan snapshot di pustaka atau submit identitas dan kebutuhan. Draft editor tersimpan otomatis di perangkat.
-3. Submit menyimpan pengajuan ke CMS dahulu. Pelanggan kemudian menekan link WhatsApp dan mengirim pesan sendiri.
-4. Admin mencatat hasil konsultasi, memperbaiki spesifikasi bila perlu, dan menerbitkan penawaran final.
-5. Pelanggan menyetujui revisi terbaru; transfer dan upload bukti. Admin memverifikasinya.
-6. Backend baru mengizinkan produksi setelah seluruh syarat lengkap. Worker menyiapkan paket kerja ZIP.
-7. Admin mencatat progres/foto dan penerimaan barang. Pengiriman/penyelesaian membutuhkan pelunasan.
+Opening WhatsApp never counts as approval. Revisions reset approval, and stale approval/payment actions cannot unlock production. Configure WhatsApp, bank details, fulfillment, prices and templates in CMS before taking real orders.
 
-Sebelum menerima pesanan nyata, atur WhatsApp, rekening, alamat, harga, tarif, dan template produksi di CMS. **13 template serta harga awal adalah contoh** yang harus divalidasi bisnis. Preview fashion/aksesori memakai GLB bersumber dengan lisensi tercatat; furnitur memakai komponen GLB kabinet yang dirakit mengikuti ukuran panel. GLB toko dapat menggantikan model default. Bentuk/pola produksi dan area cetak dikonfirmasi saat konsultasi; paket kerja tidak otomatis membuat pola jahit, file bordir, atau CNC.
+## Stack and structure
 
-## Room planner dan artwork
+| Layer   | Technology                                                                        |
+| ------- | --------------------------------------------------------------------------------- |
+| Web     | React, Vite, strict TypeScript, TanStack Router/Query, Zustand and atomic UI      |
+| Canvas  | Three.js, React Three Fiber/Drei, sourced GLBs and Konva                          |
+| API     | Bun, modular Hono services, shared Zod contracts and Better Auth                  |
+| Data    | MySQL, Drizzle, private uploads and persistent export jobs                        |
+| Tooling | ESLint, Prettier, Bun tests, Playwright, glTF Transform, Sharp and GitHub Actions |
 
-Room planner menyediakan denah polygon, sudut/dinding, partisi, pintu/jendela, penempatan furnitur dari katalog/pustaka, snapping, pengukuran dua titik, dan tampilan 2D/3D. Ruangan dapat disimpan, dibagikan sebagai salinan, dan diekspor PNG/SVG/JSON.
+```text
+apps/web/          Atomic components, pages and feature hooks/renderers
+apps/api/          Modular API, database and export worker
+packages/shared/   Contracts, geometry, pricing and production rules
+scripts/           Setup, development and model processing
+tests/e2e/         Browser workflows
+docs/              Feature guides, asset credits and demo media
+```
 
-Artwork menggunakan mm relatif titik pusat area cetak. Preview 2D/3D dan ekspor memakai renderer SVG yang sama; teks diubah menjadi path dengan font Noto lokal. Kabinet menggunakan area panel pintu/laci nyata. Ekspor 300 DPI memotong margin transparan dan membagi artwork besar menjadi tile maksimal 500 mm; posisi tile, permukaan, dan revisi tercatat dalam manifest.
+Read the [architecture](architecture.md), [PRD](PRD.md), [21-feature documentation index](docs/README.md) and [changelog](CHANGELOG.md).
 
-## Scripts dan pemeriksaan
+## Quality checks
 
 ```sh
 bun run lint
@@ -49,36 +116,41 @@ bun run test:e2e
 bun run build
 ```
 
-Tes integrasi menggunakan MySQL yang dikonfigurasi; browser tests menggunakan server lokal dan akun bootstrap. CI menjalankan checks dengan MySQL terisolasi. Screenshot/trace berada di .data, test-results dan playwright-report.
+Integration tests use the configured MySQL database and clean up their records. Browser tests use the local app and seeded admin. Temporary screenshots/traces stay in ignored .data, test-results and playwright-report. CI runs the same checks with an isolated MySQL service.
 
-Verifikasi lokal 0.2.0 pada 11 November 2026: lint, format, typecheck, dokumentasi, 19 tes domain/backend/geometri, suite 6 tes browser, dan build lulus. Alur artwork/ruangan diulang setelah perbaikan proyeksi, termasuk pemeriksaan screenshot topi dan kabinet. Build diuji dengan service worker aktif: navigasi, draft, delapan GLB default, font Inter dan gambar studio tersedia offline; respons API tidak masuk cache. Syntax Compose valid; build/run container belum diuji karena engine Docker lokal belum aktif.
+## Models and limits
 
-Perintah tambahan: bun run format, db:migrate, db:seed, start, dan worker. Untuk server produksi yang sudah dibangun, jalankan start dan worker sebagai dua proses yang diawasi supervisor.
+Nine runtime GLBs are bundled with source/license information and SHA-256 integrity records. Clothing/body share compatible MakeHuman rest poses; furniture is assembled from sourced panels. Sneaker scaling preserves source proportions.
 
-Model runtime sudah dibundel. Untuk memperbaruinya, jalankan **bun run models:prepare** (download sumber dengan verifikasi SHA-256) lalu **bun run models:previews** saat aplikasi lokal berjalan. [Panduan model dan kredit](docs/model-assets.md) menjelaskan sumber, pengolahan, dan batas preview.
+```sh
+bun run models:prepare
+# Start the local app before rendering thumbnails:
+bun run models:previews
+bun run models:previews shoe
+```
+
+Worn previews are static illustrations. They do not simulate cloth, fit or a customer's body; hats, shoes, bags and arbitrary uploaded GLBs are not fitted to the human. Room placement checks object centers and wall-opening gaps, without furniture collision detection. Production packets do not generate sewing patterns, embroidery or CNC toolpaths. See [human preview](docs/human-preview.md) and [model sources](docs/model-assets.md).
 
 ## Deployment
 
-Dockerfile dan compose.yaml menyiapkan API/frontend, worker, dan MySQL 8.4 dengan volume persisten.
+Docker runs the app, worker and MySQL with persistent database/upload volumes.
 
 ```sh
 cp .env.production.example .env.production
-# Isi domain HTTPS dan semua secret/password sendiri.
+# Fill in the public origin and your own credentials/secrets.
 docker compose --env-file .env.production up -d --build
 ```
 
-API dibind ke 127.0.0.1:3001; gunakan reverse proxy HTTPS dengan Host dan X-Forwarded-Proto yang benar. APP_URL harus sama dengan origin publik untuk cookie, pemeriksaan origin, dan link WhatsApp. Health endpoint /api/v1/health memeriksa koneksi database. Worker baru dimulai setelah migrations/seed/API siap.
+Place an HTTPS reverse proxy in front of **127.0.0.1:3001**. APP_URL must match the public origin; forward Host/X-Forwarded-Proto. Health: /api/v1/health. Back up database and uploads together and test restores separately. The local app/build is tested; the complete Docker stack still needs verification on a Docker host.
 
-Backup database dan volume uploads bersama. Pada lokal, backup database 3dmantap dan .data/uploads. Pada Compose, gunakan mysqldump melalui kredensial yang dikonfigurasi serta snapshot volume uploads; uji restore pada database/volume terpisah sebelum mengganti data aktif. Jangan menghapus volume melalui docker compose down -v jika data masih diperlukan.
+Without Docker, supervise **bun run start** and **bun run worker** after building and configuring MySQL/storage.
 
-## Dokumentasi dan aset
+## Contributing and security
 
-- [PRD](PRD.md), [arsitektur](architecture.md), [instruksi agent](AGENTS.md), [changelog](CHANGELOG.md).
-- [Indeks 20 fitur](docs/README.md), [sumber GLB dan batas model](docs/model-assets.md).
-- Font Inter, Manrope dan Noto dibundel dengan SIL Open Font License di public/fonts. Kredit GLB tersedia pada /models/credits.html. Thumbnail produk berasal dari viewer GLB aplikasi. Ikon PNG dapat diregenerasi dengan bun run apps/api/src/tools/icons.ts.
+Issues, focused pull requests and documentation improvements are welcome in Indonesian or English. Follow [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
-Preview sepatu mempertahankan proporsi GLB asli; thumbnail katalog dirender ulang setelah koreksi orientasi dan skala.
+## License and credits
 
-## Preview manusia dan penempatan pintu
+Application code is **[MIT licensed](LICENSE)**. Third-party models retain CC0/CC BY 4.0 licenses; bundled fonts use SIL Open Font License. See [model credits](docs/model-assets.md), /models/credits.html and the license files in apps/web/public/fonts.
 
-Pintu terhubung ke dinding dan dapat diseret dalam 2D/3D. Furnitur serta manusia pembanding 170 cm dapat dipindah dalam kedua mode; panel produk membandingkan tinggi. Kaos, hoodie, jaket dan celana bawaan menyediakan Preview dipakai dengan warna/artwork desain. [Panduan manusia](docs/human-preview.md) mencatat batas rest pose dan ukuran.
+Created by [bayurifkialghifari](https://github.com/bayurifkialghifari).

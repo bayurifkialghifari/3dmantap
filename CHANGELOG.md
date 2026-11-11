@@ -4,6 +4,7 @@
 
 ### Added
 
+- Public open-source documentation with MIT code licensing, contribution/security guides, issue/PR templates, screenshots and a recorded MP4/GIF demo.
 - Wall-linked doors with gap snapping, canonical wall alignment and linked duplication/deletion in 2D and 3D.
 - Direct 3D furniture dragging, with orbit disabled during drag and shared 5 cm snapping.
 - Clothed 170 cm reference human, draggable in both room views, adjustable height and SVG/JSON export.

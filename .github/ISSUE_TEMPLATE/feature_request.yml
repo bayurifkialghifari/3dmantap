@@ -1,0 +1,19 @@
+name: Feature request
+description: Propose a concrete improvement.
+title: 'feat: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: What are you trying to do, and what is missing?
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Proposed behavior
+      description: Explain the expected interaction and any constraints.
+    validations:
+      required: true
