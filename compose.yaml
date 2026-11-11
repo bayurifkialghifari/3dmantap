@@ -1,0 +1,60 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: 3dmantap
+      MYSQL_USER: 3dmantap
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [CMD, mysqladmin, ping, -h, localhost]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  api:
+    build: .
+    command: [sh, -c, 'bun run db:migrate && bun run db:seed && bun apps/api/dist/index.js']
+    environment: &app-env
+      NODE_ENV: production
+      DATABASE_URL: mysql://3dmantap:${DB_PASSWORD}@db:3306/3dmantap
+      PORT: 3001
+      APP_URL: ${APP_URL:?Set public HTTPS APP_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Set ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD}
+      UPLOAD_DIR: .data/uploads
+    ports:
+      - 127.0.0.1:3001:3001
+    volumes:
+      - uploads:/app/.data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          CMD,
+          bun,
+          -e,
+          "fetch('http://localhost:3001/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+  worker:
+    build: .
+    command: [bun, apps/api/dist/worker.js]
+    environment: *app-env
+    volumes:
+      - uploads:/app/.data/uploads
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  mysql-data:
+  uploads:
