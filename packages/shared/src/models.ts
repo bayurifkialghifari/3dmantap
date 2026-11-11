@@ -1,4 +1,4 @@
-import type { ProductTemplate } from './contracts';
+import type { ProductTemplate, DesignDocument } from './contracts';
 export type ModelAsset = {
   file: string;
   source: string;
@@ -45,7 +45,7 @@ export const productModels: Record<ProductTemplate['modelKind'], ModelAsset> = {
     author: 'Shopify',
     license: 'CC-BY-4.0',
     mode: 'shoe',
-    rotation: [0, -Math.PI / 2, 0],
+    rotation: [0, 0, 0],
   },
   bag: {
     file: 'duffel',
@@ -64,3 +64,21 @@ export const productModels: Record<ProductTemplate['modelKind'], ModelAsset> = {
 };
 export const modelFile = (template: ProductTemplate) =>
   '/models/' + productModels[template.modelKind].file + '.glb';
+
+export function productModelScale(
+  template: ProductTemplate,
+  dimensions: DesignDocument['dimensions'],
+  size: { x: number; y: number; z: number },
+): [number, number, number] {
+  if (!template.glbAssetId && template.modelKind === 'shoe') {
+    const factor = dimensions.width / 1000 / Math.max(size.x, size.z);
+    return [factor, factor, factor];
+  }
+  const depth =
+    !template.glbAssetId && template.modelKind === 'cap' ? dimensions.width : dimensions.depth;
+  return [
+    dimensions.width / 1000 / size.x,
+    dimensions.height / 1000 / size.y,
+    depth / 1000 / size.z,
+  ];
+}

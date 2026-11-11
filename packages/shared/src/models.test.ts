@@ -1,11 +1,49 @@
 import { expect, test } from 'bun:test';
 import { NodeIO } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { productModelScale, productModels } from './models';
+import { starterTemplates } from './templates';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 
 const folder = resolve(import.meta.dir, '../../../apps/web/public/models');
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
+test('sneaker keeps the sourced proportions at the configured length', async () => {
+  const document = await io.read(resolve(folder, 'sneaker.glb'));
+  const bounds = { min: [Infinity, Infinity, Infinity], max: [-Infinity, -Infinity, -Infinity] };
+  document
+    .getRoot()
+    .listScenes()[0]
+    .traverse((node) => {
+      const matrix = node.getWorldMatrix();
+      for (const primitive of node.getMesh()?.listPrimitives() ?? []) {
+        const positions = primitive.getAttribute('POSITION')!;
+        for (let i = 0; i < positions.getCount(); i++) {
+          const [x, y, z] = positions.getElement(i, [0, 0, 0]);
+          for (let axis = 0; axis < 3; axis++) {
+            const value =
+              matrix[axis] * x + matrix[axis + 4] * y + matrix[axis + 8] * z + matrix[axis + 12];
+            bounds.min[axis] = Math.min(bounds.min[axis], value);
+            bounds.max[axis] = Math.max(bounds.max[axis], value);
+          }
+        }
+      }
+    });
+  const size = {
+    x: bounds.max[0] - bounds.min[0],
+    y: bounds.max[1] - bounds.min[1],
+    z: bounds.max[2] - bounds.min[2],
+  };
+  const template = starterTemplates.find((t) => t.modelKind === 'shoe')!;
+  expect(productModels.shoe.rotation).toEqual([0, 0, 0]);
+  const scale = productModelScale(template, template.dimensions, size);
+  const actual = [size.x * scale[0], size.y * scale[1], size.z * scale[2]];
+  expect(Math.max(actual[0], actual[2])).toBeCloseTo(0.32, 6);
+  expect(actual[1] / actual[0]).toBeCloseTo(size.y / size.x, 6);
+  expect(actual[2] / actual[0]).toBeCloseTo(size.z / size.x, 6);
+  expect(actual[1]).toBeGreaterThan(0.15);
+  expect(actual[2]).toBeGreaterThan(0.1);
+});
 test('bundled GLBs match their manifest and contain finite, self-contained mesh data', async () => {
   const manifest = (await Bun.file(resolve(folder, 'manifest.json')).json()) as {
     file: string;

@@ -28,3 +28,5 @@ Bahasa Indonesia; IDR integers; UI centimeters, stored millimeters. Original sta
 ## Visual and model requirements
 
 The storefront uses large product imagery, restrained typography, a neutral palette and responsive layouts. Bundled garment/accessory meshes are sourced GLBs with recorded licenses, integrity hashes and reproducible processing. Furniture uses sourced GLB board/door components sized from the same physical panel generator as cut lists. Artwork projects onto actual product surfaces. Room 3D uses camera-dependent exterior wall cutaway. Default models/fonts/preview images remain available offline; private API assets are excluded. Source provenance and manufacturing limitations are documented in docs/model-assets.md.
+
+Sneaker detail and catalog previews preserve source proportions.

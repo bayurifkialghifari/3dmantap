@@ -7,6 +7,7 @@ import {
   furniturePanels,
   modelFile,
   productModels,
+  productModelScale,
   type ProductTemplate,
   type DesignDocument,
 } from '@3dmantap/shared';
@@ -60,15 +61,8 @@ export function GLBProduct({
     if ([size.x, size.y, size.z].some((n) => !Number.isFinite(n) || n <= 0))
       throw new Error('Dimensi model GLB tidak valid.');
     const center = box.getCenter(new THREE.Vector3());
-    const desiredDepth =
-      ((asset.mode === 'hat' ? document.dimensions.width : document.dimensions.depth) / 1000) *
-      (asset.mode === 'shoe' ? 0.4 : 1);
     const group = new THREE.Group();
-    group.scale.set(
-      document.dimensions.width / 1000 / size.x,
-      document.dimensions.height / 1000 / size.y,
-      desiredDepth / size.z,
-    );
+    group.scale.set(...productModelScale(template, document.dimensions, size));
     source.position.set(-center.x, -box.min.y, -center.z);
     source.traverse((child) => {
       if (child instanceof THREE.Mesh) {

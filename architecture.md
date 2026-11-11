@@ -27,3 +27,5 @@ When /me resolves a signed-in account with a valid visitor capability, a transac
 Asset processing uses glTF Transform and Sharp in TypeScript scripts. Sources are pinned/hash-locked, and bundled output hashes are checked in domain tests. WebP previews are captured from the application viewer with Playwright. Model credits are shipped publicly. PWA precaches public GLBs, previews and local fonts; private API assets stay outside cache. Room walls use a camera-facing cutaway while physical floorplan data remains unchanged.
 
 Bun workspace and lockfile. ESLint, Prettier, strict typechecks, Bun domain/integration tests, Playwright browser tests. Docker deployment uses persistent database and upload volumes; backup both together.
+
+Bundled sneakers use uniform scale from their longest horizontal axis.

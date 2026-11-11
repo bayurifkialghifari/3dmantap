@@ -31,3 +31,5 @@ Garment mengikuti rest pose sumber, tanpa simulasi kain atau pembuatan pola jahi
 Tes Bun memeriksa integritas file, batas cache, mesh finite, referensi self-contained serta ukuran/UV/PBR komponen panel. Playwright menunggu GLB benar-benar selesai dimuat untuk semua 13 produk dan memeriksa custom artwork serta room planner. Referensi Dribbble tidak berhasil diakses pada sesi ini; tampilan tidak diklaim sebagai salinan desain Dribbble tertentu.
 
 Tes proyeksi juga memeriksa konversi atribut quantized tanpa mengubah geometri sumber, serta penolakan sisi belakang/brim horizontal untuk cetak depan.
+
+Model sepatu panjang pada sumbu X. Runtime mempertahankan orientasi ini dan skala seragam berdasarkan sumbu horizontal terpanjang. Thumbnail katalog diregenerasi setelah koreksi. Gunakan bun run models:previews shoe untuk merender jenis ini saja.

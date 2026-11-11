@@ -17,3 +17,5 @@ Semua 13 template awal membuka viewer tanpa error; kegagalan WebGL memiliki fall
 ## Verifikasi
 
 Jalankan pemeriksaan kualitas README.md. Domain diuji dengan Bun; alur browser dan izin diuji melalui Playwright. Gunakan akun/token terpisah saat memeriksa akses privat.
+
+Thumbnail Canvas Sneaker dirender ulang dengan orientasi GLB asli dan skala seragam. Detail dan katalog memperlihatkan proporsi yang sama.

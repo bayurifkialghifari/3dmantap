@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — 2026-11-11
+
+### Fixed
+
+- Sneaker orientation and nonuniform stretching; regenerated catalog thumbnail from the corrected GLB.
+
 ## 0.2.0 — 2026-11-11
 
 ### Changed

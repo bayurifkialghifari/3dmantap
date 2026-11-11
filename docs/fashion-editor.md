@@ -19,3 +19,5 @@ Perubahan terlihat dalam 3D dan bertahan setelah reload; jumlah varian digunakan
 ## Verifikasi
 
 Jalankan pemeriksaan kualitas README.md. Domain diuji dengan Bun; alur browser dan izin diuji melalui Playwright. Gunakan akun/token terpisah saat memeriksa akses privat.
+
+Sepatu bawaan mempertahankan orientasi sumber dan skala seragam. Panjang horizontal terbesar mengikuti lebar template; tinggi/depth visual mengikuti proporsi GLB, tanpa peregangan ke dimensi nominal.

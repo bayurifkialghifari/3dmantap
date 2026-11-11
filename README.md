@@ -76,3 +76,5 @@ Backup database dan volume uploads bersama. Pada lokal, backup database 3dmantap
 - [PRD](PRD.md), [arsitektur](architecture.md), [instruksi agent](AGENTS.md), [changelog](CHANGELOG.md).
 - [Indeks 20 fitur](docs/README.md), [sumber GLB dan batas model](docs/model-assets.md).
 - Font Inter, Manrope dan Noto dibundel dengan SIL Open Font License di public/fonts. Kredit GLB tersedia pada /models/credits.html. Thumbnail produk berasal dari viewer GLB aplikasi. Ikon PNG dapat diregenerasi dengan bun run apps/api/src/tools/icons.ts.
+
+Preview sepatu mempertahankan proporsi GLB asli; thumbnail katalog dirender ulang setelah koreksi orientasi dan skala.
