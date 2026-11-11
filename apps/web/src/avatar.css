@@ -1,0 +1,94 @@
+.avatar-controls {
+  padding: 8px 0;
+}
+.avatar-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #d9d9d2;
+}
+.avatar-tabs button {
+  flex: 1;
+  padding: 10px 4px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font: inherit;
+  font-size: 12px;
+  color: #767873;
+  cursor: pointer;
+}
+.avatar-tabs button.active {
+  border-bottom-color: #303b34;
+  color: #303b34;
+}
+.avatar-measure {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar-measure .field {
+  flex: 1;
+  min-width: 0;
+}
+.avatar-auto {
+  width: 55px;
+  background: none;
+  border: none;
+  color: #53725c;
+  font-size: 10px;
+  cursor: pointer;
+}
+.avatar-auto:disabled {
+  color: #8c908a;
+  cursor: default;
+}
+.avatar-private {
+  border-top: 1px solid #ddd;
+  padding-top: 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #6d746c;
+}
+.joint-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.joint-slider input {
+  min-width: 0;
+  flex: 1;
+  accent-color: #53725c;
+}
+.joint-slider output {
+  min-width: 40px;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+.product-avatar {
+  border-top: 1px solid #d9d9d2;
+  margin-top: 22px;
+  padding-top: 16px;
+}
+.product-avatar summary {
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.product-avatar .avatar-controls {
+  max-width: 390px;
+}
+.studio-tools .tool-tabs {
+  flex-wrap: wrap;
+}
+.room-sidebar .avatar-controls {
+  padding: 0;
+}
+@media (max-width: 600px) {
+  .avatar-tabs button {
+    padding: 13px 8px;
+  }
+  .joint-slider input {
+    height: 32px;
+  }
+}

@@ -18,6 +18,8 @@ Manusia default 170 cm selalu berpakaian. Bisa disembunyikan, diatur 100–220 c
 
 RoomProject; GET/POST /library/rooms
 
+Inspector manusia kini mencakup laki-laki/perempuan, tinggi/berat, lingkar/panjang tubuh dan preset/editor sendi. Tinggi label/perbandingan selalu tinggi berdiri; duduk mengurangi tinggi visual 3D. Footprint denah mengikuti proporsi/pose dan arah manusia. Memilih sendi membuka 3D dan menahan drag manusia; orbit ditahan selama gesture handle. Profil lengkap hanya untuk pemilik/CMS, sedangkan share/copy mempertahankan recipe visual. [Panduan ukuran dan pose](body-poses.md).
+
 ## Acceptance criteria
 
 Ruangan berpotongan atau bukaan di luar dinding ditolak. Furnitur tersimpan, mode 2D/3D, berbagi dan ekspor denah dapat dipakai.

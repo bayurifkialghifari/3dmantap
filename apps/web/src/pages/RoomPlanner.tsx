@@ -22,11 +22,16 @@ import {
   roomInteriorPoint,
   type RoomProject,
   type SavedDesign,
+  defaultAvatar,
+  recipeFor,
+  avatarFootprint,
+  type AvatarJoint,
 } from '@3dmantap/shared';
 import { api, downloadJson } from '../lib/api';
 import { useTemplates } from '../lib/hooks';
 import { RoomScene } from '../components/organisms/RoomScene';
 import { HeightComparison } from '../components/molecules/HeightComparison';
+import { AvatarControls } from '../components/molecules/AvatarControls';
 import { useRoomActions } from '../features/room-planner/useRoomActions';
 import { Button, Field, Input, Select, Badge, Loading, ErrorNotice } from '../components/atoms/ui';
 export function RoomPlanner() {
@@ -57,6 +62,8 @@ export function RoomPlanner() {
   const [measurement, setMeasurement] = useState<{ x: number; y: number }[]>([]),
     [measuring, setMeasuring] = useState(false);
   const stage = useRef<Konva.Stage>(null);
+  const [poseJoint, setPoseJoint] = useState<AvatarJoint | null>(null);
+  const [poseMode, setPoseMode] = useState(false);
   const params = new URLSearchParams(location.search);
   const shareContext = params.get('room')
     ? { room: params.get('room')!, token: params.get('token') ?? '' }
@@ -81,6 +88,7 @@ export function RoomPlanner() {
   const selectedItem = room.items.find((i) => i.id === selected);
   const selectedOpening = room.openings.find((o) => o.id === selectedItem?.openingId);
   const selectObject = (id: string | null) => {
+    if (id !== 'reference-person') setPoseJoint(null);
     setSelected(id);
     const opening = room.openings.find(
       (o) => o.id === room.items.find((i) => i.id === id)?.openingId,
@@ -390,6 +398,18 @@ export function RoomPlanner() {
                 onSelect={selectObject}
                 onMove={actions.move}
                 onMovePerson={actions.movePerson}
+                poseJoint={selected === 'reference-person' ? poseJoint : null}
+                onSelectJoint={poseMode ? setPoseJoint : undefined}
+                onAvatarChange={(avatar) =>
+                  update({
+                    person: {
+                      ...room.person!,
+                      height: avatar.height,
+                      avatar,
+                      avatarRecipe: undefined,
+                    },
+                  })
+                }
               />
             </div>
           ) : (
@@ -545,13 +565,23 @@ export function RoomPlanner() {
                         }}
                       >
                         <Ellipse
-                          radiusX={250}
-                          radiusY={150}
+                          radiusX={
+                            avatarFootprint(recipeFor(room.person, room.person.height))[0] / 2
+                          }
+                          radiusY={
+                            avatarFootprint(recipeFor(room.person, room.person.height))[1] / 2
+                          }
                           fill="#677579"
                           stroke={selected === 'reference-person' ? '#e86638' : '#42494c'}
                           strokeWidth={2 / scale}
                         />
                         <Circle radius={95} fill="#c7b39d" />
+                        <Line
+                          points={[0, 180, -40, 120, 40, 120]}
+                          closed
+                          fill="#eeeae3"
+                          listening={false}
+                        />
                         <Text
                           x={-500}
                           y={200}
@@ -618,7 +648,12 @@ export function RoomPlanner() {
                 if (selected === 'reference-person') setSelected(null);
               } else {
                 update({
-                  person: { ...roomInteriorPoint(room), height: 1700, rotation: 0 },
+                  person: {
+                    ...roomInteriorPoint(room),
+                    height: 1700,
+                    rotation: 0,
+                    avatar: defaultAvatar(),
+                  },
                 });
                 setSelected('reference-person');
               }
@@ -752,22 +787,57 @@ export function RoomPlanner() {
           ) : selected === 'reference-person' && room.person ? (
             <>
               <h4>Manusia pembanding</h4>
-              <Field label="Tinggi manusia (cm)">
-                <Input
-                  type="number"
-                  min={100}
-                  max={220}
-                  value={room.person.height / 10}
-                  onChange={(e) =>
+              {room.person.avatarRecipe && !room.person.avatar ? (
+                <>
+                  <p className="help-text">
+                    Bentuk dari link publik. Ukuran pribadi pemilik tidak dibagikan.
+                  </p>
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      update({
+                        person: {
+                          ...room.person!,
+                          avatar: defaultAvatar(room.person!.height),
+                          avatarRecipe: undefined,
+                        },
+                      })
+                    }
+                  >
+                    Buat profil sendiri
+                  </Button>
+                </>
+              ) : (
+                <AvatarControls
+                  profile={room.person.avatar ?? defaultAvatar(room.person.height)}
+                  joint={poseJoint}
+                  onPoseModeChange={setPoseMode}
+                  onSelectJoint={(j) => {
+                    setPoseJoint(j);
+                    if (j) {
+                      setMode('3d');
+                      if (!room.person!.avatar)
+                        update({
+                          person: {
+                            ...room.person!,
+                            avatar: defaultAvatar(room.person!.height),
+                            avatarRecipe: undefined,
+                          },
+                        });
+                    }
+                  }}
+                  onChange={(avatar) =>
                     update({
                       person: {
                         ...room.person!,
-                        height: Math.max(100, Math.min(220, Number(e.target.value))) * 10,
+                        height: avatar.height,
+                        avatar,
+                        avatarRecipe: undefined,
                       },
                     })
                   }
                 />
-              </Field>
+              )}
               {(['x', 'y'] as const).map((axis) => (
                 <Field key={axis} label={'Posisi manusia ' + axis.toUpperCase() + ' (cm)'}>
                   <Input
@@ -780,6 +850,17 @@ export function RoomPlanner() {
                   />
                 </Field>
               ))}
+              <Field label="Arah manusia (°)">
+                <Input
+                  type="number"
+                  min={-360}
+                  max={360}
+                  value={room.person.rotation}
+                  onChange={(e) =>
+                    update({ person: { ...room.person!, rotation: Number(e.target.value) } })
+                  }
+                />
+              </Field>
               <p className="help-text">
                 Tinggi pembanding digunakan bersama ukuran pintu dan furnitur.
               </p>

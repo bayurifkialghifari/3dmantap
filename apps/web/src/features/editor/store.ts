@@ -1,6 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 import { persist } from 'zustand/middleware';
 import { createDesign, type DesignDocument, type ProductTemplate } from '@3dmantap/shared';
+import { avatarProfileSchema } from '@3dmantap/shared';
 export type EditorState = {
   document: DesignDocument;
   past: DesignDocument[];
@@ -9,9 +10,13 @@ export type EditorState = {
   undo: () => void;
   redo: () => void;
   reset: () => void;
+  beginGesture: () => void;
+  previewDocument: (d: DesignDocument) => void;
+  endGesture: () => void;
 };
 export function makeEditorStore(t: ProductTemplate) {
-  return createStore<EditorState>()(
+  let gesture: DesignDocument | undefined;
+  const store = createStore<EditorState>()(
     persist(
       (set, get) => ({
         document: createDesign(t),
@@ -38,6 +43,16 @@ export function makeEditorStore(t: ProductTemplate) {
             });
         },
         reset: () => get().setDocument(createDesign(t)),
+        beginGesture: () => {
+          gesture ??= get().document;
+        },
+        previewDocument: (document) => set({ document }),
+        endGesture: () => {
+          const start = gesture;
+          gesture = undefined;
+          if (start && JSON.stringify(start) !== JSON.stringify(get().document))
+            set((s) => ({ past: [...s.past, start].slice(-40), future: [] }));
+        },
       }),
       {
         name: '3dmantap:draft:' + t.id,
@@ -45,4 +60,17 @@ export function makeEditorStore(t: ProductTemplate) {
       },
     ),
   );
+  const transfer = sessionStorage.getItem('3dmantap:avatar:' + t.id);
+  if (transfer) {
+    sessionStorage.removeItem('3dmantap:avatar:' + t.id);
+    try {
+      const avatar = avatarProfileSchema.parse(JSON.parse(transfer));
+      store
+        .getState()
+        .setDocument({ ...store.getState().document, avatar, avatarRecipe: undefined });
+    } catch {
+      /* Ignore a stale preview selection. */
+    }
+  }
+  return store;
 }

@@ -13,6 +13,10 @@ import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import {
   roomItemPose,
+  recipeFor,
+  avatarFootprint,
+  type AvatarJoint,
+  type AvatarProfile,
   type RoomProject,
   type ProductTemplate,
   type RoomPoint,
@@ -166,6 +170,9 @@ export function RoomScene({
   onSelect,
   onMove,
   onMovePerson,
+  poseJoint,
+  onSelectJoint,
+  onAvatarChange,
 }: {
   room: RoomProject;
   templates: ProductTemplate[];
@@ -174,6 +181,9 @@ export function RoomScene({
   onSelect?: (id: string | null) => void;
   onMove?: (id: string, point: RoomPoint) => void;
   onMovePerson?: (point: RoomPoint) => void;
+  poseJoint?: AvatarJoint | null;
+  onSelectJoint?: (joint: AvatarJoint | null) => void;
+  onAvatarChange?: (profile: AvatarProfile) => void;
 }) {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const [dragging, setDragging] = useState(false);
@@ -295,11 +305,32 @@ export function RoomScene({
               center={center}
               selected={selected === 'reference-person'}
               onSelect={() => onSelect?.('reference-person')}
-              onMove={onMovePerson}
+              onMove={poseJoint ? undefined : onMovePerson}
               onDragging={setDrag}
-              footprint={[0.5, 0.35]}
+              footprint={
+                avatarFootprint(recipeFor(room.person, room.person.height)).map(
+                  (v) => v / 1000,
+                ) as [number, number]
+              }
             >
-              <HumanModel height={room.person.height} />
+              <HumanModel
+                height={room.person.height}
+                profile={room.person.avatar}
+                renderRecipe={room.person.avatarRecipe}
+                editing={
+                  selected === 'reference-person' &&
+                  room.person.avatar &&
+                  onAvatarChange &&
+                  onSelectJoint
+                    ? {
+                        joint: poseJoint ?? null,
+                        onSelect: onSelectJoint,
+                        onChange: onAvatarChange,
+                        onDragging: setDrag,
+                      }
+                    : undefined
+                }
+              />
             </DraggableEntity>
           )}
         </Suspense>

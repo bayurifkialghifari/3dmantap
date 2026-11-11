@@ -1,17 +1,31 @@
 import { Link, useParams } from '@tanstack/react-router';
+import { useState } from 'react';
 import { ArrowUpRight, Check, Upload, Move3D } from 'lucide-react';
-import { createDesign, priceDesign, rupiah } from '@3dmantap/shared';
+import {
+  createDesign,
+  priceDesign,
+  rupiah,
+  defaultAvatar,
+  type AvatarProfile,
+  type AvatarJoint,
+} from '@3dmantap/shared';
+import { AvatarControls } from '../components/molecules/AvatarControls';
 import { useTemplates } from '../lib/hooks';
 import { Viewer } from '../components/organisms/Viewer';
 import { Badge, Loading, ErrorNotice } from '../components/atoms/ui';
 import { ProductCard } from '../components/molecules/ProductCard';
 export function Product() {
   const { id } = useParams({ strict: false });
+  const [profiles, setProfiles] = useState<Record<string, AvatarProfile>>({});
+  const [joint, setJoint] = useState<AvatarJoint | null>(null);
+  const [poseMode, setPoseMode] = useState(false);
   const { data: templates, isPending, error } = useTemplates();
   if (isPending) return <Loading />;
   const t = templates?.find((t) => t.id === id);
   if (!t) return <ErrorNotice error={error ?? 'Produk tidak ditemukan'} />;
   const d = createDesign(t);
+  d.avatar = profiles[t.id];
+  const canTryOn = ['shirt', 'hoodie', 'jacket', 'pants'].includes(t.modelKind) && !t.glbAssetId;
   return (
     <div className="section product-page">
       <div className="breadcrumbs">
@@ -26,6 +40,10 @@ export function Product() {
           <Viewer
             template={t}
             document={d}
+            forceWorn={!!d.avatar}
+            joint={joint}
+            onSelectJoint={poseMode ? setJoint : undefined}
+            onAvatarChange={(avatar) => setProfiles((p) => ({ ...p, [t.id]: avatar }))}
             capture={new URLSearchParams(window.location.search).has('capture')}
           />
           <div className="preview-caption">
@@ -52,9 +70,32 @@ export function Product() {
                     .join(' × ') + ' cm'}
             </span>
           </div>
-          <Link to="/studio/$id" params={{ id: t.id }} className="button primary large full">
+          <Link
+            to="/studio/$id"
+            params={{ id: t.id }}
+            className="button primary large full"
+            onClick={() => {
+              if (d.avatar)
+                sessionStorage.setItem('3dmantap:avatar:' + t.id, JSON.stringify(d.avatar));
+            }}
+          >
             Custom produk ini <ArrowUpRight size={19} />
           </Link>
+          {canTryOn && (
+            <details className="product-avatar">
+              <summary>Model, ukuran tubuh & pose</summary>
+              <AvatarControls
+                profile={d.avatar ?? defaultAvatar()}
+                joint={joint}
+                onPoseModeChange={setPoseMode}
+                onSelectJoint={(j) => {
+                  setJoint(j);
+                  if (j && !d.avatar) setProfiles((p) => ({ ...p, [t.id]: defaultAvatar() }));
+                }}
+                onChange={(avatar) => setProfiles((p) => ({ ...p, [t.id]: avatar }))}
+              />
+            </details>
+          )}
           <ul className="feature-list">
             <li>
               <Check size={16} /> Desain dulu, konsultasi sebelum produksi

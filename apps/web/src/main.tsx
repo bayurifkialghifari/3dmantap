@@ -14,6 +14,7 @@ import { Inquiry, Preview } from './pages/Inquiry';
 import { Admin } from './pages/Admin';
 import './styles.css';
 import './showroom.css';
+import './avatar.css';
 const root = createRootRoute({
   component: AppShell,
   notFoundComponent: () => (
