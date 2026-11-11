@@ -15,7 +15,19 @@ export function prepareRoom(document: RoomProject, catalog: ProductTemplate[]): 
     if (template.modelKind !== 'door' && item.openingId)
       fail('Bukaan dinding hanya untuk produk pintu.', 422);
   }
-  const canonical = syncRoomAttachments(document);
+  const attached = syncRoomAttachments(document);
+  const canonical =
+    attached.person && (attached.person.avatar || attached.person.avatarRecipe)
+      ? {
+          ...attached,
+          person: {
+            ...attached.person,
+            height:
+              attached.person.avatar?.height ??
+              Math.round(attached.person.avatarRecipe!.stature * 1000),
+          },
+        }
+      : attached;
   const issues = validRoom(canonical);
   if (issues.length) fail(issues.join(' '), 422);
   return canonical;

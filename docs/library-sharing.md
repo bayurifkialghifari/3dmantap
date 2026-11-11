@@ -6,6 +6,8 @@ Desain server tersimpan dengan pemilik akun atau token perangkat; draft lokal te
 
 ## Kontrak dan data
 
+Profil tubuh lengkap tersimpan untuk pemilik desain/ruangan. Share desain, share room (termasuk avatar pada item desain) dan preview WhatsApp menghapus AvatarProfile lalu mengirim AvatarRenderRecipe. Berat serta lingkar/panjang mentah tidak berada dalam respons publik. Recipe mempertahankan bentuk/pose sehingga proporsi visual tetap dapat terlihat. Salinan room publik menyimpan recipe sampai penerima membuat profil sendiri; [kontrak profil dan pose](body-poses.md).
+
 /library/designs; /library/share/:id; /library/rooms/share/:id
 
 ## Acceptance criteria

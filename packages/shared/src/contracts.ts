@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { avatarProfileSchema, avatarRenderRecipeSchema } from './avatar-contracts';
 
 export const studioSchema = z.enum(['fashion', 'interior']);
 export type Studio = z.infer<typeof studioSchema>;
@@ -76,6 +77,8 @@ export const layerSchema = z.object({
 });
 export type ArtworkLayer = z.infer<typeof layerSchema>;
 export const designSchema = z.object({
+  avatar: avatarProfileSchema.optional(),
+  avatarRecipe: avatarRenderRecipeSchema.optional(),
   schemaVersion: z.literal(1),
   templateId: z.string(),
   name: z.string().min(1).max(120),
@@ -159,6 +162,8 @@ export const roomSchema = z.object({
       y: z.number().finite(),
       rotation: z.number().finite(),
       height: z.number().min(1000).max(2200),
+      avatar: avatarProfileSchema.optional(),
+      avatarRecipe: avatarRenderRecipeSchema.optional(),
     })
     .optional(),
 });

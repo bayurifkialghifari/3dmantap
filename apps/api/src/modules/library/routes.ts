@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { and, eq } from 'drizzle-orm';
 import { randomBytes } from 'node:crypto';
-import { designSchema, roomSchema } from '@3dmantap/shared';
+import { designSchema, roomSchema, publicDesign, publicRoom } from '@3dmantap/shared';
 import { prepareRoom } from './service';
 import { db } from '../../db/client';
 import { designs, rooms, templates } from '../../db/schema';
@@ -53,7 +53,7 @@ libraryRoutes.get('/share/:id', async (c) => {
       and(eq(designs.id, c.req.param('id')), eq(designs.shareToken, c.req.query('token') ?? '')),
     );
   if (!row) fail('Link tidak tersedia', 404);
-  return c.json({ id: row.id, name: row.name, document: row.document });
+  return c.json({ id: row.id, name: row.name, document: publicDesign(row.document) });
 });
 libraryRoutes.post('/designs/:id/revoke', async (c) => {
   const condition = and(eq(designs.id, c.req.param('id')), eq(designs.ownerId, owner(c)));
@@ -95,5 +95,5 @@ libraryRoutes.get('/rooms/share/:id', async (c) => {
     .from(rooms)
     .where(and(eq(rooms.id, c.req.param('id')), eq(rooms.shareToken, c.req.query('token') ?? '')));
   if (!row) fail('Link tidak tersedia', 404);
-  return c.json({ document: row.document });
+  return c.json({ document: publicRoom(row.document) });
 });

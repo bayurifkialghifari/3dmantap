@@ -8,19 +8,25 @@ import {
   starterTemplates,
   defaultRoom,
   addRoomProduct,
+  defaultAvatar,
+  avatarRecipe,
+  presetPose,
+  type SavedDesign,
+  type DesignDocument,
   type RoomProject,
   type Inquiry,
 } from '@3dmantap/shared';
 import { app } from './app';
 import { config } from './config';
 import { db } from './db/client';
-import { inquiries, jobs, assets, audit, rooms } from './db/schema';
+import { inquiries, jobs, assets, audit, rooms, designs } from './db/schema';
 import { exportPacket } from './modules/production/export';
 let cookie = '';
 const visitor = crypto.randomUUID() + crypto.randomUUID();
 const ids: string[] = [];
 const assetIds: string[] = [];
 const roomIds: string[] = [];
+const designIds: string[] = [];
 const req = (path: string, method = 'GET', data?: unknown, isAdmin = false) =>
   app.request('/api/v1' + path, {
     method,
@@ -51,6 +57,85 @@ afterAll(async () => {
   }
   if (assetIds.length) await db.delete(assets).where(inArray(assets.id, assetIds));
   if (roomIds.length) await db.delete(rooms).where(inArray(rooms.id, roomIds));
+  if (designIds.length) await db.delete(designs).where(inArray(designs.id, designIds));
+});
+test('private avatar measurements persist for owners and CMS but never appear in public design, room or WhatsApp previews', async () => {
+  const avatar = {
+    ...defaultAvatar(1750),
+    sex: 'female' as const,
+    weight: 73500,
+    measurements: { waist: 825, arm: 580 },
+    pose: presetPose('sitting'),
+  };
+  const document = {
+    ...createDesign(starterTemplates.find((t) => t.modelKind === 'shirt')!),
+    avatar,
+  };
+  const saved = await req('/library/designs', 'POST', document);
+  expect(saved.status).toBe(201);
+  const row = (await saved.json()) as SavedDesign;
+  designIds.push(row.id);
+  expect(row.document.avatar).toEqual(avatar);
+  const publicDesign = (await (
+    await req('/library/share/' + row.id + '?token=' + row.shareToken)
+  ).json()) as { document: DesignDocument };
+  expect(publicDesign.document.avatar).toBeUndefined();
+  expect(publicDesign.document.avatarRecipe).toEqual(avatarRecipe(avatar));
+  const cabinet = {
+    ...createDesign(starterTemplates.find((t) => t.modelKind === 'cabinet')!),
+    avatar,
+  };
+  const room = {
+    ...structuredClone(defaultRoom),
+    person: { x: 1000, y: 1000, rotation: 15, height: 1700, avatar },
+    items: [{ id: 'cabinet', x: 2000, y: 2000, rotation: 0, document: cabinet }],
+  };
+  const roomResponse = await req('/library/rooms', 'POST', room);
+  expect(roomResponse.status).toBe(201);
+  const r = (await roomResponse.json()) as {
+    id: string;
+    shareToken: string;
+    document: RoomProject;
+  };
+  roomIds.push(r.id);
+  expect(r.document.person?.height).toBe(1750);
+  expect(r.document.person?.avatar).toEqual(avatar);
+  const sharedRoom = (await (
+    await req('/library/rooms/share/' + r.id + '?token=' + r.shareToken)
+  ).json()) as { document: RoomProject };
+  expect(sharedRoom.document.person?.avatar).toBeUndefined();
+  expect(sharedRoom.document.items[0].document.avatar).toBeUndefined();
+  expect(sharedRoom.document.person?.avatarRecipe).toEqual(avatarRecipe(avatar));
+  const submitted = await req('/inquiries', 'POST', {
+    document,
+    customerName: 'Avatar QA',
+    phone: '081234567890',
+    address: 'Synthetic QA',
+    notes: 'Preview body',
+    idempotencyKey: crypto.randomUUID(),
+  });
+  expect(submitted.status).toBe(201);
+  const inquiry = (await submitted.json()) as Inquiry;
+  ids.push(inquiry.id);
+  expect(inquiry.document.avatar).toEqual(avatar);
+  const preview = (await (
+    await req('/inquiries/preview/' + inquiry.id + '?token=' + inquiry.previewToken)
+  ).json()) as { document: DesignDocument };
+  expect(preview.document.avatar).toBeUndefined();
+  expect(preview.document.avatarRecipe).toEqual(avatarRecipe(avatar));
+  for (const data of [publicDesign, sharedRoom, preview]) {
+    const json = JSON.stringify(data);
+    expect(json).not.toContain('"weight":');
+    expect(json).not.toContain('"measurements":');
+  }
+  expect((await req('/inquiries/preview/' + inquiry.id + '?token=wrong')).status).toBe(404);
+  sharedRoom.document.person!.height = 1400;
+  const copy = await req('/library/rooms', 'POST', sharedRoom.document);
+  expect(copy.status).toBe(201);
+  const copied = (await copy.json()) as typeof r;
+  roomIds.push(copied.id);
+  expect(copied.document.person?.height).toBe(1750);
+  expect(copied.document.person?.avatarRecipe).toEqual(sharedRoom.document.person?.avatarRecipe);
 });
 test('room save canonicalizes mounted doors, rejects malformed links and isolates owners', async () => {
   const door = createDesign(starterTemplates.find((t) => t.modelKind === 'door')!);

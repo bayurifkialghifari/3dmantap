@@ -4,6 +4,7 @@ import { eq, and } from 'drizzle-orm';
 import { randomBytes } from 'node:crypto';
 import {
   designSchema,
+  publicDesign,
   quoteSchema,
   priceDesign,
   validateDesign,
@@ -112,7 +113,7 @@ inquiryRoutes.get('/preview/:id', async (c) => {
   return c.json({
     id: i.id,
     code: i.code,
-    document: i.document,
+    document: publicDesign(i.document),
     template: i.template,
     revision: i.revision,
   });

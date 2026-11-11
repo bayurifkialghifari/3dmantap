@@ -6,3 +6,5 @@ export * from './artwork';
 export * from './room-export';
 export * from './models';
 export * from './room-placement';
+export * from './avatar-contracts';
+export * from './avatar';
